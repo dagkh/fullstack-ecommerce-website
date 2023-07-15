@@ -1,0 +1,194 @@
+﻿@{
+    ViewBag.Title = "Brands";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<div class="row d-flex justify-content-between">
+    <div class="col-12 col-sm-12 col-md-12 col-lg-5 col-xl-5 mb-5">
+        @Html.Partial("_BrandForm")
+    </div>
+
+    <div class="col-12 col-sm-12 col-md-12 col-lg-7 col-xl-7 table-responsive">
+        <table class="table table-hover table-dark">
+            <thead>
+                <tr>
+                    <th style="width: 10%;">ID</th>
+                    <th style="width: 70%;">Brand Name</th>
+                    <th style="text-align: center;">Action</th>
+                </tr>
+            </thead>
+            <tbody id="data-table">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteBrandModal" tabindex="-1" aria-labelledby="deleteBrandModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteBrandModalLabel">Delete Brand</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5 class="text-danger">Are you sure to delete this brand ?</h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal" onclick="Delete()">Delete</button>
+                <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editBrandModal" tabindex="-1" aria-labelledby="editBrandModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="editBrandModalLabel">Edit Brand</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-inputs mb-2">
+                        <label class="m-0">Brand ID</label>
+                        <input type="text" class="form-control" id="inputBrandId" placeholder="ID" disabled="disabled" required>
+                    </div>
+                    <div class="form-inputs mb-2">
+                        <label class="m-0">Brand Name</label>
+                        <input type="text" class="form-control" id="inputBrandName" placeholder="Brand Name" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal" onclick="UpdateBrand()">Update</button>
+                <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        ShowData();
+    });
+
+    function ShowData() {
+        $.ajax({
+            type: "GET",
+            url: "/Api/Brands/GetAll",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                $("#data-table").empty();
+
+                var brands = "";
+
+                for (var i = 0; i < response.length; i++) {
+                    var brand = "";
+                    var id = response[i].Id;
+                    var name = response[i].Name;
+
+                    brand = brand
+                        + "<tr>"
+                        + "<td class='align-middle'>" + id + "</td>"
+                        + "<td class='align-middle'>" + name + "</td>"
+                        + "<td class='align-middle d-flex justify-content-between align-items-center'>"
+                        + "<button class='btn btn-secondary w-50' data-bs-toggle='modal' data-bs-target='#editBrandModal' onclick='GetBrandToEdit(" + id + ")'>Edit</button>&nbsp;<button class='btn btn-danger w-50' data-bs-toggle='modal' data-bs-target='#deleteBrandModal' onclick='GetBrandToDelete(" + id + ")'>Delete</button>"
+                        + "</td>"
+                        + "</tr>";
+
+                    brands += brand;
+                }
+
+                if (brands != "") {
+                    $("#data-table").append(brands);
+                }
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+
+    // DELETE
+    var currentBrandIdToDelete = '';
+    function GetBrandToDelete(id) {
+        $.ajax({
+            type: "GET",
+            url: "/Api/Brands/GetById?brandId=" + id,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                if (response) {
+                    currentBrandIdToDelete = id;
+                }
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+    function Delete() {
+        $.ajax({
+            type: "DELETE",
+            url: "/Api/Brands/Delete?brandId=" + currentBrandIdToDelete,
+            success: function (response) {
+                ShowData();
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+
+    // EDIT
+    var currentBrandIdToUpdate = '';
+    function GetBrandToEdit(id) {
+        $.ajax({
+            type: "GET",
+            url: "/Api/Brands/GetById?brandId=" + id,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                if (response) {
+                    currentBrandIdToUpdate = id;
+                    $("#inputBrandId").val(response.Id);
+                    $("#inputBrandName").val(response.Name);
+                }
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+    function UpdateBrand() {
+        var brandForm = {};
+
+        if ($('#inputBrandName').val() === '') {
+            alert("No filed can be left blank");
+        }
+        else {
+            brandForm.Id = $('#inputBrandId').val();
+            brandForm.Name = $('#inputBrandName').val();
+
+            if (brandForm) {
+                $.ajax({
+                    type: "PUT",
+                    url: "/Api/Brands/Update?brandId=" + currentBrandIdToUpdate,
+                    dataType: "json",
+                    data: JSON.stringify(brandForm),
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+                        ShowData();
+                    },
+                    error: function (errorMessage) {
+                        alert(errorMessage);
+                    }
+                });
+            }
+        }
+    }
+</script>

@@ -1,0 +1,13 @@
+﻿
+<form class="row d-flex justify-content-center align-content-center">
+    <!--Order Id-->
+    <div class="row mb-3">
+        <label class="mb-1 p-0" for="">Order ID</label>
+        <input type="text" class="form-control" id="inputOrderId" disabled="disabled" required>
+    </div>
+    <!--Order Status-->
+    <div class="row mb-3">
+        <label class="mb-1 p-0" for="">Order Status</label>
+        @Html.Partial("_InputSelectOptionOrderStatus")
+    </div>
+</form>

@@ -1,0 +1,76 @@
+﻿@model LuigiiLuxury.Domain.ViewModels.UserFormViewModel
+
+@using (Html.BeginForm("Update", "Account", FormMethod.Post, new { @class = "card-body needs-validation p-2" }))
+{
+    @Html.AntiForgeryToken()
+
+    <!-- First Name -->
+    <div class="form-group mb-2 row d-flex align-items-center justify-content-between">
+        <div class="col-sm-3">
+            @Html.LabelFor(m => m.FirstName, new { @class = "col-form-label" })
+        </div>
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = "First Name" })
+            @Html.ValidationMessageFor(m => m.FirstName)
+        </div>
+    </div>
+
+    <!-- Last Name -->
+    <div class="form-group mb-2 row d-flex align-items-center justify-content-between">
+        <div class="col-sm-3">
+            @Html.LabelFor(m => m.LastName, new { @class = "col-form-label" })
+        </div>
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "Last Name" })
+            @Html.ValidationMessageFor(m => m.LastName)
+        </div>
+    </div>
+
+    <!-- Address -->
+    <div class="form-group mb-2 row d-flex align-items-center justify-content-between">
+        <div class="col-sm-3">
+            @Html.LabelFor(m => m.Address, new { @class = "col-form-label" })
+        </div>
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.Address, new { @class = "form-control", placeholder = "Address" })
+            @Html.ValidationMessageFor(m => m.Address)
+        </div>
+    </div>
+
+    <!-- Phone Number -->
+    <div class="form-group mb-2 row d-flex align-items-center justify-content-between">
+        <div class="col-sm-3">
+            @Html.LabelFor(m => m.PhoneNumber, new { @class = "col-form-label" })
+        </div>
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", placeholder = "Phone Number" })
+            @Html.ValidationMessageFor(m => m.PhoneNumber)
+        </div>
+    </div>
+
+    <!-- City -->
+    <div class="form-group mb-2 row d-flex align-items-center justify-content-between">
+        <div class="col-sm-3">
+            @Html.LabelFor(m => m.City, new { @class = "col-form-label" })
+        </div>
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.City, new { @class = "form-control", placeholder = "City" })
+            @Html.ValidationMessageFor(m => m.City)
+        </div>
+    </div>
+
+    @Html.HiddenFor(m => m.Id)
+
+    <div class="form-group row mt-5 d-flex align-items-center justify-content-between">
+        <div class="row col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 d-flex align-items-center justify-content-between">
+            <div class="col-5 col-sm-5 col-md-5 d-grid">
+                <button class="btn btn-dark px-5" type="submit">Save</button>
+            </div>
+            <div class="col-5 col-sm-5 col-md-5 d-grid">
+                <a class="btn btn-light border" href="/Account/Index">Cancel</a>
+            </div>
+        </div>
+        <div class="col-12 col-sm-12 col-md-12 col-lg-8 col-xl-8">
+        </div>
+    </div>
+}

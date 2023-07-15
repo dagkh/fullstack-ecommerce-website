@@ -1,0 +1,33 @@
+﻿
+@model LuigiiLuxury.Domain.ViewModels.LoginViewModel
+
+@{
+    ViewBag.Title = "Login";
+}
+
+
+@using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "card-body needs-validation register-login-form" }))
+{
+    @Html.AntiForgeryToken()
+    <!-- EMAIL -->
+    <div class="forms-inputs mb-2">
+        @Html.LabelFor(m => m.Email)
+        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email" })
+        @Html.ValidationMessageFor(m => m.Email)
+        @Html.ValidationMessage("NotFindEmail")
+    </div>
+
+    <!-- PASSWORD -->
+    <div class="forms-inputs mb-2">
+        @Html.LabelFor(m => m.Password)
+        @Html.TextBoxFor(m => m.Password, new { @class = "form-control", placeholder = "Password", type = "password" })
+        @Html.ValidationMessageFor(m => m.Password)
+        @Html.ValidationMessage("ErrorPassword")
+    </div>
+
+    <!--LOGIN & CREATE ACCOUNT-->
+    <div class="d-flex justify-content-between mt-4">
+        <div><button class="btn btn-dark px-5 text-uppercase"><p class="text-white">Login</p></button></div>
+        <div><a href="/Account/Register" class="text-uppercase"><p class="text-black">Create Account</p></a></div>
+    </div>
+}

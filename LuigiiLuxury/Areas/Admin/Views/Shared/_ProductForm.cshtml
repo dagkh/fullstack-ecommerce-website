@@ -1,0 +1,223 @@
+﻿@model LuigiiLuxury.Domain.ViewModels.ProductFormViewModel
+
+@using (Html.BeginForm("Update", "Products", new { area = "Admin" }, FormMethod.Post, new { enctype = "multipart/form-data", @class = "p-4" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+
+    <!-- Id -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-betweben">
+        @Html.LabelFor(m => m.Id, new { @class = "col-sm-3 col-form-label" })
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.Id, new { @class = "form-control", id = "inputID", name = "Id", type = "text", disabled = "disabled", required = "required", placeholder = "ID" })
+            @Html.ValidationMessageFor(m => m.Id)
+        </div>
+    </div>
+
+    <!-- Name -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-betweben">
+        @Html.LabelFor(m => m.Name, new { @class = "col-sm-3 col-form-label" })
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.Name, new { @class = "form-control", name = "Name", type = "text", id = "inputName", placeholder = "enter name of product" })
+            @Html.ValidationMessageFor(m => m.Name)
+        </div>
+    </div>
+
+    <!-- Brand -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+        @Html.LabelFor(m => m.BrandId, new { @class = "col-sm-3 col-form-label" })
+        <div class="col-sm-9">
+            @Html.Partial("_InputSelectOptionBrand")
+            @Html.ValidationMessageFor(m => m.BrandId)
+        </div>
+    </div>
+
+    <!-- AvailabilityStatus Code -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+        @Html.LabelFor(m => m.AvailabilityStatusCode, new { @class = "col-sm-3 col-form-label" })
+        <div class="col-sm-9">
+            @Html.Partial("_InputSelectOptionAvailabilitySatus")
+            @Html.ValidationMessageFor(m => m.AvailabilityStatusCode)
+        </div>
+    </div>
+
+    <!-- Price -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+        @Html.LabelFor(m => m.Price, new { @class = "col-sm-3 col-form-label" })
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.Price, new { name = "Price", type = "text", @class = "form-control", id = "inputPrice", placeholder = "enter price" })
+            @Html.ValidationMessageFor(m => m.Price)
+        </div>
+    </div>
+
+    <!-- Discount Price -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+        @Html.LabelFor(m => m.DiscountPrice, new { @class = "col-sm-3 col-form-label" })
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.DiscountPrice, new { name = "Price", type = "text", @class = "form-control", id = "inputDiscountPrice", placeholder = "enter discount price" })
+            @Html.ValidationMessageFor(m => m.DiscountPrice)
+        </div>
+    </div>
+
+    <!-- Number Of Products -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+        @Html.LabelFor(m => m.NumberOfProducts, new { @class = "col-sm-3 col-form-label" })
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.NumberOfProducts, new { type = "text", @class = "form-control", id = "inputNumberOfProducts", placeholder = "enter number of product" })
+            @Html.ValidationMessageFor(m => m.NumberOfProducts)
+        </div>
+    </div>
+
+    <!-- Description -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+        @Html.LabelFor(m => m.Description, new { @class = "col-sm-3 col-form-label" })
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.Description, new { type = "text", @class = "form-control", id = "inputDescription", placeholder = "enter description" })
+            @Html.ValidationMessageFor(m => m.Description)
+        </div>
+    </div>
+
+    <!-- Condition -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+        @Html.LabelFor(m => m.Condition, new { @class = "col-sm-3 col-form-label" })
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.Condition, new { type = "text", @class = "form-control", id = "inputCondition", placeholder = "enter condition" })
+            @Html.ValidationMessageFor(m => m.Condition)
+        </div>
+    </div>
+
+    <!-- Image -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+        @Html.LabelFor(m => m.Thumbnail, new { @class = "col-sm-3 col-form-label" })
+        <div class="col-sm-9">
+            <input type="file" class="form-control" id="inputImage" name="image" accept="image/*" onchange="readURL(this);" />
+        </div>
+    </div>
+
+    <div class="form-group row d-flex align-content-center justify-content-between mt-4">
+        <div class="col-5 col-sm-5 col-md-5 col-lg-4 col-xl-4 d-grid">
+            <button id="delte" type="button" class="btn btn-danger" data-bs-toggle='modal' data-bs-target='#Product-DeleteModal' onclick="ShowProductDeleteModal()">Delete</button>
+        </div>
+        <div class="col-5 col-sm-5 col-md-5 col-lg-4 col-xl-4 d-grid">
+            <button id="update" type="submit" class="btn btn-dark">Update</button>
+        </div>
+    </div>
+}
+
+<!--PRODUCT DELETE MODAL-->
+<div class="modal fade" id="Product-DeleteModal" tabindex="-1" aria-labelledby="OrderDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="OrderDetailsModalLabel">product delete</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5 class="text-danger">Are you sure want to delete this product?</h5>
+            </div>
+            <div class="modal-footer">
+                <button onclick="DeleteProduct()" type="button" id="delete-user-button" class="btn btn-danger" data-bs-dismiss="modal">Delete</button>
+                <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#blah').attr('src', e.target.result).width("100%");
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $(document).ready(function () {
+        showDetails();
+    })
+    function showDetails() {
+        $.ajax({
+            type: "GET",
+            url: "/Api/Products/GetById?productId=" + @Model.Id,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                //$("#inputID").val(response.Id);
+                //$("#inputName").val(response.Name);
+                //$("#inputPrice").val(response.Price);
+                //$("#inputNumberOfProducts").val(response.NumberOfProducts);
+                //$("#inputDescription").val(response.Description);
+                //$("#inputCondition").val(response.Condition);
+                $("#inputBrand").val(response.Brand.Id);
+                $("#inputAvailabilityStatus").val(response.AvailabilityStatusCode);
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        })
+    }
+
+    @*function Update() {
+        var product = {};
+
+        product.Id = $("#inputID").val();
+        product.Name = $("#inputName").val();
+        product.Price = $("#inputPrice").val();
+        product.NumberOfProducts = $("#inputNumberOfProducts").val();
+        product.BrandId = $("#inputBrand").val();
+        product.AvailabilityStatusCode = $("#inputAvailabilityStatus").val();
+        product.DiscountPrice = $("#inputDiscountPrice").val();
+        product.Description = $("#inputDescription").val();
+        product.Condition = $("#inputCondition").val();
+
+        $.ajax({
+            type: "PUT",
+            url: "/Api/Products/Update?productId=" + @Model,
+            data: JSON.stringify(product),
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                ShowDetails();
+                alert("your change have been successfully updated.");
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        })
+    }*@
+
+    // DELETE
+    function ShowProductDeleteModal() {
+        var url = "/Api/Products/GetById?productId=" + @Model;
+        $.ajax({
+            type: "GET",
+            url: url,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                if (response) {
+                    currentOrderIdToDelete = id;
+                }
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+    function DeleteProduct() {
+        var url = "/Api/Products/Delete?productId=" + @Model;
+        $.ajax({
+            type: "DELETE",
+            url: url,
+            success: function (response) {
+                window.location.href = '/Admin/Products/Index';
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+</script>

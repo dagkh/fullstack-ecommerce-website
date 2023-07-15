@@ -1,0 +1,13 @@
+﻿
+<form class="row d-flex justify-content-center align-content-center">
+    <!--User Id-->
+    <div class="row mb-3">
+        <label class="mb-1 p-0" for="">User ID</label>
+        <input type="text" class="form-control" id="inputUserId" disabled="disabled" required>
+    </div>
+    <!--Role-->
+    <div class="row mb-3">
+        <label class="mb-1 p-0" for="">Role</label>
+        @Html.Partial("_InputSelectOptionRole")
+    </div>
+</form>

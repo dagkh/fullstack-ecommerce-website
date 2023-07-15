@@ -1,0 +1,119 @@
+﻿@*@model IEnumerable<LuigiiLuxury.Domain.ViewModels.OrderDetailsViewModel>*@
+
+@{
+    ViewBag.Title = "Order Details";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<!-- Delete Modal -->
+<div class="modal fade" id="OrderDetailsDeleteModal" tabindex="-1" aria-labelledby="deleteOrderDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteOrderDetailsModalLabel">Delete Order-Details</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5 class="text-danger">Are you sure to delete this order details?</h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal" onclick="Delete()">Delete</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover table-dark">
+        <thead>
+            <tr>
+                <th style="width: 5%;">ID</th>
+                <th style="width: 7%;">Order ID</th>
+                <th style="width: 8%;">Product</th>
+                <th></th>
+                <th style="text-align: center; width: 10%;">Unit Price</th>
+                <th style="text-align: center; width: 10%;">Quantity</th>
+                <th style="text-align: center; width: 10%;">Discount</th>
+                <th style="text-align: center; width: 10%;">Action</th>
+        </thead>
+        <tbody id="data-table">
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+        ShowData();
+    });
+
+    function ShowData() {
+        $.ajax({
+            type: "GET",
+            url: "/Api/OrderDetails/GetAll",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response) {
+                    $("#data-table").empty();
+                    var allRecord = "";
+                    for (var i = 0; i < response.length; i++) {
+                        var record = '';
+                        var id = response[i].Id;
+                        record = record
+                            + "<tr>"
+                            + "<td class='align-middle'>" + response[i].Id + "</td>"
+                            + "<td class='align-middle'><a class='text-white text-decoration-none' href='/Admin/Orders/Details?orderId=" + response[i].OrderId + "'>" + response[i].OrderId + "</a></td>"
+                            + "<td class='align-middle'><a href='/Admin/Products/Details?productId=" + response[i].ProductId + "'><img src='" + response[i].Product.Thumbnail + "'" + "alt = 'image' style = 'width: 100%; height: 100%;'/></a></td>"
+                            + "<td class='align-middle'><a class='text-light text-decoration-none' href='/Admin/Products/Details?productId=" + response[i].ProductId + "'>" + response[i].Product.Name + "</a></td>"
+                            + "<td class='align-middle' style='text-align: center;'>" + "$" + response[i].UnitPrice + ".00" + "</td>"
+                            + "<td class='align-middle' style='text-align: center;'>" + response[i].Quantity + "</td>"
+                            + "<td class='align-middle' style='text-align: center;'>" + response[i].Discount + "</td>"
+                            + "<td class='align-middle' class='d-flex justify-content-center align-items-center'>" + "<button class='btn btn-danger w-100' data-bs-toggle='modal' data-bs-target='#OrderDetailsDeleteModal' onclick='ShowOrderModalDetailsModal(" + id + ")'>Delete</button>" + "</td>"
+                            + "</tr>";
+                        allRecord += record;
+                    }
+                    if (allRecord != '') {
+                        $("#data-table").append(allRecord);
+                    }
+                }
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+
+    // DELETE
+    var currentOrderDetailsIdToDelete = '';
+    function ShowOrderModalDetailsModal(id) {
+        var url = "/Api/OrderDetails/GetById?orderDetailsId=" + id;
+        $.ajax({
+            type: "GET",
+            url: url,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                if (response) {
+                    currentOrderDetailsIdToDelete = id;
+                }
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+    function Delete() {
+        $.ajax({
+            type: "DELETE",
+            url: "/Api/OrderDetails/Delete?orderDetailsId=" + currentOrderDetailsIdToDelete,
+            success: function (response) {
+                ShowData();
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+</script>

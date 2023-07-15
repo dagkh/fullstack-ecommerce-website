@@ -1,0 +1,277 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@700&family=Oswald:wght@700&family=Poppins:ital,wght@0,400;0,600;0,700;0,900;1,500&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    list-style-type: none;
+    font-family: 'Dosis', sans-serif;
+    font-family: 'Oswald', sans-serif;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+}
+
+body {
+    min-height: 100vh;
+}
+
+#header-wrap {
+    height: 20vh;
+}
+
+.header {
+    width: 100%;
+    top: 0;
+    text-transform: uppercase;
+}
+
+    .header .header-nav-link {
+        font-size: 16px;
+        padding: 0 15px;
+    }
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+
+h1 {
+    text-align: center;
+    margin: 0;
+    font-weight: 900;
+    color: black;
+    font-size: 20px;
+    font-style: italic;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.d-flex {
+    margin: 0;
+    padding: 0;
+    align-items: center;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0;
+}
+
+.dropdown-menu {
+    padding: 0;
+    top: 40px;
+    left: 0;
+    border: none;
+    min-width: 190px;
+    border-radius: inherit;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.header-top {
+    padding: 40px 0;
+}
+
+
+.page-link {
+    color: black;
+    font-size: 10px;
+}
+
+.field-validation-error {
+    color: red;
+}
+
+.validation-summary-errors {
+    color: red;
+}
+
+
+#header .main-nav li a {
+}
+
+.padding30px {
+    padding: 0 30px;
+}
+
+.padding-left-right-30px {
+    padding: 0 30px;
+}
+
+hr {
+    margin: 0;
+}
+
+/***/
+.nav-link {
+    color: black;
+    padding: 18px;
+    font-size: 12px;
+}
+
+.pagination-link {
+    padding: 8px;
+}
+
+.checkouts-form label, .register-login-form label {
+    text-transform: uppercase;
+    font-size: 10px;
+    margin-bottom: 8px;
+}
+
+.form-control, .btn {
+    border-radius: 1px;
+}
+
+
+
+@media screen and (max-height: 450px) {
+    .overlay a {
+        font-size: 20px;
+        text-transform: uppercase;
+    }
+
+    .overlay .closebtn {
+        font-size: 40px;
+        top: 15px;
+        right: 35px;
+    }
+}
+
+p {
+    margin: 0;
+    color: black;
+    font-size: 10px !important;
+}
+
+.overlay a {
+    text-transform: uppercase;
+}
+/*// Small devices (landscape phones, 576px and up)*/
+@media (min-width: 576px) {
+    .checkout-info {
+        padding: 0 !important;
+    }
+}
+
+/*// Medium devices (tablets, 768px and up)*/
+@media (min-width: 768px) {
+    .checkout-info {
+        padding: 0 !important;
+    }
+}
+
+/*// Large devices (desktops, 992px and up)*/
+@media (min-width: 992px) {
+    #menu {
+        display: none;
+    }
+
+    #visible-menu {
+        display: flex !important;
+    }
+
+    #search {
+        display: block !important;
+    }
+
+    #account {
+        display: block !important;
+    }
+
+    .cart-title-hidden {
+        display: block !important;
+    }
+
+    .for-desktop {
+        display: flex !important;
+    }
+
+    .for-mobile-tablet {
+        display: none !important;
+    }
+
+    p {
+        font-size: 13px !important;
+    }
+
+    .all-cart {
+        margin: 50px 25px;
+    }
+
+    h1 {
+        font-size: 25px;
+    }
+
+    .checkout-product {
+    }
+
+    .checkout-info {
+        padding: 50px;
+    }
+
+    .checkout-product {
+        display: block !important;
+    }
+}
+
+/*// Extra large devices (large desktops, 1200px and up)*/
+@media (min-width: 1200px) {
+    #menu {
+        display: none;
+    }
+
+    #visible-menu {
+        display: flex !important;
+    }
+
+    #search {
+        display: block !important;
+    }
+
+    #account {
+        display: block !important;
+    }
+
+    .cart-title-hidden {
+        display: block !important;
+    }
+
+    .for-desktop {
+        display: flex !important;
+    }
+
+    .for-mobile-tablet {
+        display: none !important;
+    }
+
+    p {
+        font-size: 12px !important;
+    }
+
+    .all-cart {
+        margin: 50px 25px;
+    }
+
+    h1 {
+        font-size: 25px;
+    }
+
+    .checkout-product {
+        padding: 50px;
+        border-left: 1px solid black;
+    }
+
+    .checkout-info {
+        padding: 50px;
+    }
+
+    .checkout-product {
+        display: block !important;
+    }
+}
+
+.field-validation-error {
+    color: red;
+    text-transform: uppercase;
+    font-size: 10px;
+}

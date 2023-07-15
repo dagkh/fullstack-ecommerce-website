@@ -1,0 +1,34 @@
+﻿@model LuigiiLuxury.Domain.ViewModels.ProductViewModel
+
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h2>Product Details</h2>
+
+<table class="table">
+    <tr>
+        <th>Product Name</th>
+        <td>@Model.Name</td>
+    </tr>
+    <tr>
+        <th>Price</th>
+        <td>@Model.Price</td>
+    </tr>
+    <tr>
+        <th>Availability Status</th>
+        <td>@Model.AvailabilityStatus</td>
+    </tr>
+    <tr>
+        <th>Condition</th>
+        <td>@Model.Condition</td>
+    </tr>
+    <tr>
+        <th>Brand</th>
+        <td>@Model.Brand.Name</td>
+    </tr>
+</table>
+<a href="/Collections/All/"><i class="fa fa-long-arrow-left"></i> Back to Products</a>

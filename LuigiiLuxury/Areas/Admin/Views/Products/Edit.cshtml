@@ -1,0 +1,109 @@
+﻿@model LuigiiLuxury.ViewModels.UpdateProductViewModel
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<div class="row justify-content-center align-content-center">
+    @using (Html.BeginForm("Edit", "Products", new { area = "Admin" }, FormMethod.Post, new { @class = "col-12 col-sm-12 col-md-12 col-lg-8 col-xl-8 border p-3", enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        <!-- Product Name -->
+        <div class="col-12 p-0 mb-3">
+            @Html.LabelFor(model => model.ProductTitle)
+            @Html.TextBoxFor(model => model.ProductID, new { type = "hidden", value = Model.ProductID })
+            @Html.TextBoxFor(model => model.ProductTitle, new { @class = "form-control", placeholder = "Product Name", value = Model.ProductTitle })
+        </div>
+
+
+        <!-- BrandID -->
+        <div class="col-12 p-0 mb-3">
+            @Html.LabelFor(model => model.Brand.BrandName)
+            @Html.DropDownListFor(model => model.BrandID,
+    new SelectList(ViewBag.Brands, "BrandID", "BrandName"),
+    "-- Please Select --",
+    new { @class = "form-select form-select-lg mb-0 rounded-0", placeholder = "Product Name", value = Model.Brand.BrandName })
+        </div>
+
+
+        <!-- Price -->
+        <div class="col-12 p-0 mb-3">
+            @Html.LabelFor(model => model.Price)
+            @Html.TextBoxFor(model => model.Price, new { @class = "form-control", placeholder = "Price", value = Model.Price })
+        </div>
+
+        <!-- Discount Price -->
+        <div class="col-12 p-0 mb-3">
+            @Html.LabelFor(model => model.DiscountPrice)
+            @Html.TextBoxFor(model => model.DiscountPrice, new { @class = "form-control", placeholder = "Discount Price", value = Model.DiscountPrice })
+        </div>
+
+
+        <!-- Condition -->
+        <div class="col-12 p-0 mb-3">
+            @Html.LabelFor(model => model.Condition)
+            @Html.TextBoxFor(model => model.Condition, new { @class = "form-control", placeholder = "Condition", value = Model.Condition })
+        </div>
+
+        <!-- Description -->
+        <div class="col-12 p-0 mb-3">
+            @Html.LabelFor(model => model.Description)
+            @Html.TextBoxFor(model => model.Description, new { @class = "form-control", placeholder = "Description", value = Model.Description })
+        </div>
+
+        <!-- Number Of Products -->
+        <div class="col-12 p-0 mb-3">
+            @Html.LabelFor(model => model.NumberOfProducts)
+            @Html.TextBoxFor(model => model.NumberOfProducts, new { @class = "form-control", placeholder = "Number Of Products", value = Model.NumberOfProducts })
+            @Html.ValidationMessageFor(model => model.NumberOfProducts)
+        </div>
+
+        <!-- Is Deleted -->
+        <div class="col-12 p-0 mb-3">
+            @Html.LabelFor(model => model.IsDeleted)
+            <div class="form-check">
+                @Html.RadioButtonFor(model => model.IsDeleted, true, new { @class = "form-check-input", id = "true", value = Model.IsDeleted })
+                <label class="form-check-label" for="true">true</label>
+            </div>
+            <div class="form-check">
+                @Html.RadioButtonFor(model => model.IsDeleted, false, new { @class = "form-check-input", id = "false", value = Model.IsDeleted })
+                <label class="form-check-label" for="false">false</label>
+            </div>
+            @Html.ValidationMessageFor(model => model.IsDeleted)
+        </div>
+
+
+        <!-- Availability Status -->
+        <div class="col-12 p-0 mb-3">
+            @Html.LabelFor(model => model.AvailabilityStatusTitle)
+            <div class="form-check">
+                @Html.RadioButtonFor(model => model.AvailabilityStatusTitle, "sold out", new { @class = "form-check-input", id = "InStock", value = Model.AvailabilityStatusTitle })
+                <label class="form-check-label" for="InStock">sold out</label>
+            </div>
+            <div class="form-check">
+                @Html.RadioButtonFor(model => model.AvailabilityStatusTitle, "available", new { @class = "form-check-input", id = "OutStock", value = Model.AvailabilityStatusTitle })
+                <label class="form-check-label" for="OutStock">available</label>
+            </div>
+            @Html.ValidationMessageFor(model => model.AvailabilityStatusTitle)
+        </div>
+
+
+        <!-- Image -->
+        <div class="col-12 p-0 mb-3">
+            @Html.LabelFor(model => model.Thumbnail, new { @class = "control-label" })
+            <div class="col-sm-9">
+                @Html.TextBoxFor(model => model.Thumbnail, new { @type = "hidden" })
+                <input type="file" class="form-control" id="image" name="image" accept="image/*" value="@Model.Thumbnail" />
+                @Html.ValidationMessageFor(model => model.Thumbnail)
+            </div>
+        </div>
+
+
+        <!--Create and Cancel button-->
+        <div class="row col-12 mx-0 my-3 d-flex justify-content-between justify-content-center">
+            <button class="col-5 btn btn-dark" type="submit">Save</button>
+            <a class="btn btn-danger col-5" href="/admin/products/index">Cancel</a>
+        </div>
+    }
+</div>

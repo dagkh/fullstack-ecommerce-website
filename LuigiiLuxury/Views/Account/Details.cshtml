@@ -1,0 +1,339 @@
+﻿@model int
+
+@{
+    ViewBag.Title = "OrderDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<hr />
+<div style="border-bottom: 1px solid #c6c6c6; margin-bottom: 15px;">
+    <a href="/Account/Orders" style="font-size: 11px; text-transform: uppercase; display: block; padding: 15px 0;"><i class="fa fa-solid fa-chevron-left"></i> back to orders</a>
+</div>
+
+<div style="margin-bottom: 15px;">
+    <h2 style="font-size: 15px; font-weight: bold;">Order Details</h2>
+</div>
+
+<div class="row d-flex justify-content-between align-items-start my-3">
+    <div class="border col-12 col-sm-12 col-md-12 col-lg-5 col-xl-5 mb-3 p-2">
+        <form class="">
+            <!-- Order Date -->
+            <div class="form-group mb-2 row d-flex align-content-center justify-content-betweben">
+                <label class="col-sm-3 col-form-label">Order Date</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="inputOrderDate" disabled="disabled">
+                </div>
+            </div>
+
+            <!-- Order Status -->
+            <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+                <label class="col-sm-3 col-form-label">Order Status</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="inputOrderStatus" disabled="disabled">
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+                <label class="col-sm-3 col-form-label">Email</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="inputEmail" placeholder="enter email">
+                </div>
+            </div>
+
+            <!-- Full Name -->
+            <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+                <label class="col-sm-3 col-form-label">Full Name</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="inputShipFullName" placeholder="enter ship full name">
+                </div>
+            </div>
+
+            <!-- Phone Nubmber -->
+            <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+                <label class="col-sm-3 col-form-label">Phone</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="inputShipPhoneNumber" placeholder="enter ship phone number">
+                </div>
+            </div>
+
+            <!-- Country -->
+            <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+                <label class="col-sm-3 col-form-label">Country</label>
+                <div class="col-sm-9">
+                    @Html.Partial("_InputSelectOptionCountry")
+                </div>
+            </div>
+
+            <!-- Region -->
+            <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+                <label class="col-sm-3 col-form-label">Region</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="inputShipRegion" placeholder="enter ship region">
+                </div>
+            </div>
+
+            <!-- City -->
+            <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+                <label class="col-sm-3 col-form-label">City</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="inputShipCity" placeholder="enter ship city">
+                </div>
+            </div>
+
+            <!-- Address -->
+            <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+                <label class="col-sm-3 col-form-label">Address</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="inputShipAddress" placeholder="enter ship address">
+                </div>
+            </div>
+
+            <!-- Note -->
+            <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+                <label class="col-sm-3 col-form-label">Note</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="inputNote" placeholder="enter note">
+                </div>
+            </div>
+
+            <div class="form-group row d-flex align-content-center justify-content-between mt-4">
+                <div class="col-5 col-sm-5 col-md-5 col-lg-4 col-xl-4 d-grid">
+                    <button id="create" type="button" class="btn btn-danger" data-bs-toggle='modal' data-bs-target='#Order-DeleteModal' onclick="ShowOrderDeleteModal()">Delete</button>
+                </div>
+                <div class="col-5 col-sm-5 col-md-5 col-lg-4 col-xl-4 d-grid">
+                    <button id="create" type="button" class="btn btn-dark" onclick="Update()">Update</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="table-responsive col-12 col-sm-12 col-md-12 col-lg-7 col-xl-7">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th style="text-align: left;"><p>Product</p></th>
+                    <th></th>
+                    <th style="text-align: center; width: 15%"><p>Unit Price</p></th>
+                    <th style="text-align: center; width: 10%"><p>Quantity</p></th>
+                    <th style="text-align: center; width: 10%"><p>Discount</p></th>
+                    <th style="text-align: center; width: 10%"><p>Action</p></th>
+                </tr>
+            </thead>
+            <tbody id="data-table">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+<!--order detele modal-->
+<div class="modal fade" id="Order-DeleteModal" tabindex="-1" aria-labelledby="OrderDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="OrderDetailsModalLabel">order delete</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5 class="text-danger">Are you sure want to delete this order?</h5>
+            </div>
+            <div class="modal-footer">
+                <button onclick="DeleteOrder()" type="button" id="delete-user-button" class="btn btn-danger" data-bs-dismiss="modal">Delete</button>
+                <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- order details delete modal -->
+<div class="modal fade" id="OrderDetailsDeleteModal" tabindex="-1" aria-labelledby="deleteOrderDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5 class="text-danger">Are you sure to want delete?</h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal" onclick="DeleteOrderDetails()">Delete</button>
+                <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        ShowForm();
+        ShowListOrderDetails();
+    })
+
+        function ShowForm() {
+            $.ajax({
+                type: "GET",
+                url: "/Api/Orders/GetById?orderId=" + @Model,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    $("#inputOrderID").val(response.Id);
+                    $("#inputUserID").val(response.UserId);
+                    $("#inputOrderDate").val(response.OrderDate);
+                    $("#inputOrderStatus").val(response.OrderStatusCode);
+                    $("#inputCountry").val(response.CountryCode);
+                    $("#inputEmail").val(response.Email);
+                    $("#inputShipFullName").val(response.ShipFullName);
+                    $("#inputShipPhoneNumber").val(response.ShipPhoneNumber);
+                    $("#inputShipRegion").val(response.ShipRegion);
+                    $("#inputShipCity").val(response.ShipCity);
+                    $("#inputShipAddress").val(response.ShipAddress);
+                    $("#inputNote").val(response.Note);
+                },
+                error: function (errorMessage) {
+                    alert(errorMessage);
+                }
+            })
+    }
+
+        function ShowListOrderDetails() {
+            $.ajax({
+                type: "GET",
+                url: "/Api/OrderDetails/GetByOrderId?orderId=" + @Model,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response) {
+
+                        $("#data-table").empty();
+
+                        var listOrderDetails = "";
+
+                        for (var i = 0; i < response.length; i++) {
+                            var orderDetails = '';
+                            var id = response[i].Id;
+
+                            orderDetails = orderDetails
+                                + "<tr>"
+                                + "<td class='align-middle' style='text-align: center;'>" +"<img src='" + response[i].Product.Thumbnail + "'" + "alt = 'image' style = 'height: 100px;'/></a>" + "</td>"
+                                + "<td class='align-middle' style='text-align: left;'><p>" + response[i].Product.Name + "</p></td>"
+                                + "<td class='align-middle' style='text-align: center;'><p>" + "$" + response[i].UnitPrice + ".00" + "</p></td>"
+                                + "<td class='align-middle' style='text-align: center;'><p>" + response[i].Quantity + "</p></td>"
+                                + "<td class='align-middle' style='text-align: center;'><p>" + response[i].Discount + "</p></td>"
+                                + "<td class='align-middle'>"
+                                + "<div class='d-flex justify-content-center'>"
+                                + "<button class='btn btn-danger' data-bs-toggle='modal' data-bs-target='#OrderDetailsDeleteModal' onclick='ShowOrderDetailsDeleteModal(" + id + ")'><p class='text-white'>Delete</p></button>"
+                                + "</div>"
+                                + "</td>";
+
+                            listOrderDetails += orderDetails;
+                        }
+
+                        if (listOrderDetails != '') {
+                            $("#data-table").append(listOrderDetails);
+                        }
+                    }
+                },
+                error: function (errorMessage) {
+                    alert(errorMessage);
+                }
+            });
+    }
+
+        function Update() {
+            var orderForm = {};
+
+            orderForm.Id = $("#inputOrderID").val();
+            orderForm.OrderDate = $("#inputOrderDate").val();
+            orderForm.Email = $("#inputEmail").val();
+            orderForm.ShipFullName = $("#inputShipFullName").val();
+            orderForm.ShipPhoneNumber = $("#inputShipPhoneNumber").val();
+            orderForm.ShipAddress = $("#inputShipAddress").val();
+            orderForm.ShipCity = $("#inputShipCity").val();
+            orderForm.ShipRegion = $("#inputShipRegion").val();
+            orderForm.UserId = $("#inputUserID").val();
+            orderForm.OrderStatusCode = $("#inputOrderStatus").val();
+            orderForm.CountryCode = $("#inputCountry").val();
+            orderForm.Note = $("#inputNote").val();
+
+            $.ajax({
+                type: "PUT",
+                url: "/Api/Orders/Update?orderId=" + @Model,
+                data: JSON.stringify(orderForm),
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    ShowForm();
+                    alert("your change have been successfully updated.");
+                },
+                error: function (errorMessage) {
+                    alert(errorMessage);
+                }
+            })
+    }
+
+
+    // delete order
+    function ShowOrderDeleteModal() {
+        var url = "/Api/Orders/GetById?orderId=" + @Model;
+        $.ajax({
+            type: "GET",
+            url: url,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                if (response) {
+                    currentOrderIdToDelete = id;
+                }
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+    function DeleteOrder() {
+        var url = "/Api/Orders/Delete?orderId=" + @Model;
+        $.ajax({
+            type: "DELETE",
+            url: url,
+            success: function (response) {
+                window.location.href = '/Account/Orders';
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+
+
+    var currentOrderDetailsIdToDelete = '';
+    function ShowOrderDetailsDeleteModal(id) {
+        $.ajax({
+            type: "GET",
+            url: "/Api/OrderDetails/GetById?orderDetailsId=" + id,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                if (response) {
+                    currentOrderDetailsIdToDelete = id;
+                }
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+    function DeleteOrderDetails() {
+        $.ajax({
+            type: "DELETE",
+            url: "/Api/OrderDetails/Delete?orderDetailsId=" + currentOrderDetailsIdToDelete,
+            success: function (response) {
+                ShowListOrderDetails();
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+</script>

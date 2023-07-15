@@ -1,0 +1,153 @@
+﻿@{
+    ViewBag.Title = "Products";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<div class="my-2">
+    <a class="text-white text-decoration-none btn btn-primary" href="~/Admin/Products/Create"><i class="fa fa-solid fa-plus"></i> Create New</a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover table-dark">
+        <thead>
+            <tr>
+                <th style="width: 5%; text-align: center;">ID</th>
+                <th style="width: 5%;">Product</th>
+                <th style=""></th>
+                <th style="width: 15%;">Brand</th>
+                <th style="width: 10%;">Price</th>
+                <th style="width: 10%;">Status</th>
+                <th style="width: 5%;">No</th>
+                <th style="width: 13%; text-align: center;">Action</th>
+        </thead>
+        <tbody id="data-table">
+        </tbody>
+    </table>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="ProductsDeleteModal" tabindex="-1" aria-labelledby="deleteProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteProductModalLabel">Delete Product</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5 class="text-danger">Are you sure to delete?</h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal" onclick="Delete()">Delete</button>
+                <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+        ShowData();
+    });
+
+    function ShowData() {
+        $.ajax({
+            type: "GET",
+            url: "/Api/Products/GetAll",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response) {
+                    $("#data-table").empty();
+                    var products = "";
+
+                    for (var i = 0; i < response.length; i++) {
+
+                        var product = "";
+                        var id = response[i].Id;
+                        var image = response[i].Thumbnail;
+
+                        product = product
+                            + "<tr>"
+                            + "<td class='align-middle text-center'>" + id + "</td>"
+                            + "<td class='align-middle'>"
+                            + "<a href='/Admin/Products/Details?productId=" + id + "'><img src='" + image + "'" + "alt = 'image' style = 'height: 80px;'/></a>"
+                            + "</td>"
+                            + "<td class='align-middle'><a class='text-white text-decoration-none' href='/Admin/Products/Details?productId=" + id + "'>" + response[i].Name + "</a></td>";
+
+                        if (response[i].BrandId == null) {
+                            product += "<td class='align-middle text-danger'>" + "NULL" + "</td>";
+                        }
+                        else {
+                            product += "<td class='align-middle'>" + response[i].Brand.Name + "</td>";
+                        }
+
+                        product = product
+                            + "<td class='align-middle'>" + "$" + response[i].Price + ".00" + "</td>";
+
+                        if (response[i].AvailabilityStatusCode === 'AVAI') {
+                            product = product + "<td class='text-primary align-middle'>"
+                        }
+                        else if (response[i].AvailabilityStatusCode === 'SOLD') {
+                            product = product + "<td class='text-danger align-middle'>"
+                        }
+
+                        product = product
+                            + response[i].AvailabilityStatus.Name + "</td>"
+                            + "<td class='align-middle'>" + response[i].NumberOfProducts + "</td>"
+                            + "<td class='align-middle'>"
+                            + "<div class='d-flex justify-content-between align-items-center'>"
+                            + "<a href='/Admin/Products/Details?productId=" + id + "' class='btn btn-primary text-white'>Details</a>"
+                            + "<button class='btn btn-danger' data-bs-toggle='modal' data-bs-target='#ProductsDeleteModal' onclick='ShowProductModal(" + id + ")'>Delete</button>"
+                            + "</div>"
+                            + "</td>"
+                            + "</tr>";
+
+                        if (product != "")
+                            products += product;
+                    }
+
+                    if (products != '') {
+                        $("#data-table").append(products);
+                    }
+                }
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+
+    // DELETE
+    var currentProductIdToDelete = '';
+    function ShowProductModal(id) {
+        var url = "/Api/Products/GetById?productId=" + id;
+        $.ajax({
+            type: "GET",
+            url: url,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                if (response) {
+                    currentProductIdToDelete = id;
+                }
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+
+    function Delete() {
+        $.ajax({
+            type: "DELETE",
+            url: "/Api/Products/Delete?productId=" + currentProductIdToDelete,
+            success: function (response) {
+                ShowData();
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+</script>

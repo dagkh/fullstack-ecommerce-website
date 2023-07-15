@@ -1,0 +1,41 @@
+﻿
+<select id="inputRole" class="form-select" aria-label="Default select example">
+</select>
+
+<script>
+    $(document).ready(function () {
+        ShowRoleSelectOption();
+    })
+
+    function ShowRoleSelectOption() {
+        $.ajax({
+            type: "GET",
+            url: "/Api/Roles/GetAll",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                if (response) {
+                    var options = "<option selected>-- select role --</option>";
+                    $("#inputRole").empty();
+
+                    for (var i = 0; i < response.length; i++) {
+                        var code = response[i].Code;
+                        var name = response[i].Name;
+                        var option = "<option value='" + code + "'>" + name + "</option>";
+
+                        if (option != "") {
+                            options += option;
+                        }
+                    }
+
+                    if (options != "") {
+                        $("#inputRole").append(options);
+                    }
+                }
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+</script>

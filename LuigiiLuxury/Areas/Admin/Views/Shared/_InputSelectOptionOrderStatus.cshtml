@@ -1,0 +1,41 @@
+﻿
+<select id="inputOrderStatus" name="OrderStatusCode" class="form-select" aria-label="Default select example">
+</select>
+
+<script>
+    $(document).ready(function () {
+        ShowOrderStatusSelectOption();
+    })
+
+    function ShowOrderStatusSelectOption() {
+        $.ajax({
+            type: "GET",
+            url: "/Api/OrderStatus/GetAll",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                if (response) {
+                    var options = "<option selected>-- select order status --</option>";
+                    $("#inputOrderStatus").empty();
+
+                    for (var i = 0; i < response.length; i++) {
+                        var code = response[i].Code;
+                        var name = response[i].Name;
+                        var option = "<option value='" + code + "'>" + name + "</option>";
+
+                        if (option != "") {
+                            options += option;
+                        }
+                    }
+
+                    if (options != "") {
+                        $("#inputOrderStatus").append(options);
+                    }
+                }
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+</script>

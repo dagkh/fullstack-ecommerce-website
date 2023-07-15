@@ -1,0 +1,132 @@
+﻿@model int
+
+@{
+    ViewBag.Title = "MyOrders";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<hr />
+<div style=" border-bottom: 1px solid #c6c6c6; margin-bottom: 15px;">
+    <a href="/Account/Index" style="font-size: 11px; text-transform: uppercase; display: block; padding: 15px 0;"><i class="fa fa-solid fa-chevron-left"></i> back to account</a>
+</div>
+
+<div style="margin-bottom: 15px;">
+    <h2 style="font-size: 15px; font-weight: bold;">Recent Orders</h2>
+</div>
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col"><p>#</p></th>
+                <th scope="col"><p>Date</p></th>
+                <th scope="col"><p>Phone</p></th>
+                <th scope="col"><p>Address</p></th>
+                <th scope="col"><p>Status</p></th>
+                <th scope="col" class="text-center" style="width: 15%;"><p>Action</p></th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider" id="data-table">
+        </tbody>
+    </table>
+    @*<div style="margin-top: 15px;">
+            <p style="font-size: 12px; text-transform: uppercase;" class="text-danger">you doesn't have anyresponse[i].</p>
+        </div>*@
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="OrderDeleteModal" tabindex="-1" aria-labelledby="deleteOrderDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5 class="text-danger">Are you sure to want delete?</h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal" onclick="Delete()">Delete</button>
+                <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        ShowOrders();
+    });
+
+    function ShowOrders() {
+        $.ajax({
+            type: "GET",
+            url: "/Api/Orders/GetOrdersByUserId?userId=" + @Model,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                var orders = "";
+                $("#data-table").empty();
+
+                for (var i = 0; i < response.length; i++) {
+                    var order = "";
+
+                    order = order
+                        + "<tr>"
+                        +"<td class='align-middle' scope='row'><div class='d-flex justify-content-between align-items-center'><p>#" + response[i].Id + "</p></div></td>"
+                        + "<td class='align-middle'><div class='d-flex justify-content-between align-items-center'><p>" + response[i].OrderDate+ "</p></div></td>"
+                        + "<td class='align-middle'><div class='d-flex justify-content-between align-items-center'><p>" +response[i].ShipPhoneNumber +"</p></div></td>"
+                        + "<td class='align-middle'><div class='d-flex justify-content-between align-items-center'><p>" + response[i].ShipAddress + "</p></div>"
+                        + "<td class='align-middle'><div class='d-flex justify-content-between align-items-center'><p>" + response[i].OrderStatus.Name + "</p></div>"
+                        + "<td class='align-middle'><div class='d-flex justify-content-between align-items-center'>"
+                        + "<a role='button' class='btn btn-dark' href='/Account/Details?orderId=" + response[i].Id +"'><p class='text-white'>Details</p></a>"
+                        + "<button type='button' class='btn btn-danger' data-bs-toggle='modal' data-bs-target='#OrderDeleteModal' onclick='ShowOrderModal(" + response[i].Id + ")'><p class='text-white'>Delete</p></button>"
+                        + "</div></td>"
+                        + "</tr>";
+
+                    if (order != "") {
+                        orders += order;
+                    }
+                }
+
+                if (orders != "") {
+                    $("#data-table").append(orders);
+                }
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+
+    // DELETE
+    var currentOrderIdToDelete = '';
+    function ShowOrderModal(id) {
+        var url = "/Api/Orders/GetById?orderId=" + id;
+        $.ajax({
+            type: "GET",
+            url: url,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                if (response) {
+                    currentOrderIdToDelete = id;
+                }
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+
+    function Delete() {
+        $.ajax({
+            type: "DELETE",
+            url: "/Api/Orders/Delete?orderId=" + currentOrderIdToDelete,
+            success: function (response) {
+                ShowOrders();
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+</script>

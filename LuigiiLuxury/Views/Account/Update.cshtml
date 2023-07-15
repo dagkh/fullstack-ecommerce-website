@@ -1,0 +1,20 @@
+﻿@model LuigiiLuxury.Domain.ViewModels.UserFormViewModel
+
+@{
+    ViewBag.Title = "ChangeProfile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<hr />
+<div>
+    <span style="font-size: 11px; text-transform: uppercase; display: block; padding: 15px 0;"><a href="/Account/Index"><i class="fa fa-solid fa-chevron-left"></i> back to account</a></span>
+</div>
+<hr />
+
+<div style="min-height: 80vh;" class="row d-flex justify-content-center align-content-center">
+    <div class="p-0 col-12 col-sm-12 col-md-12 col-lg-10 col-xl-10">
+        @Html.Partial("_UpdateUserForm", Model)
+    </div>
+</div>
+
+

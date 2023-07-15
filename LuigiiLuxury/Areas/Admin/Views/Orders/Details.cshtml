@@ -1,0 +1,133 @@
+﻿@model LuigiiLuxury.Domain.ViewModels.OrderViewModel
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<hr class="m-0" />
+<div style=" border-bottom: 1px solid #c6c6c6; margin-bottom: 48px;">
+    <a href="/Admin/Orders/Index" class="text-dark text-decoration-none" style="font-size: 12px; text-transform: uppercase; display: block; padding: 15px 0;"><i class="fa fa-solid fa-chevron-left"></i> back to list of orders</a>
+</div>
+
+<div class="row d-flex justify-content-between align-items-start my-3">
+    <div class="border col-12 col-sm-12 col-md-12 col-lg-5 col-xl-5 mb-3 p-2">
+        @Html.Partial("_OrderInformationForm", Model.Id)
+    </div>
+    <div class="table-responsive col-12 col-sm-12 col-md-12 col-lg-7 col-xl-7">
+        <table class="table  table-hover table-dark">
+            <thead>
+                <tr>
+                    <th style="text-align: left;">Product</th>
+                    <th></th>
+                    <th style="text-align: center; width: 15%">Unit Price</th>
+                    <th style="text-align: center; width: 10%">Quantity</th>
+                    <th style="text-align: center; width: 10%">Discount</th>
+                    <th style="text-align: center; width: 10%">Action</th>
+                </tr>
+            </thead>
+            <tbody id="data-table">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="OrderDetailsDeleteModal" tabindex="-1" aria-labelledby="delete-orderDetails-modal-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="delete-orderDetails-modal-label">Delete Order Details</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5 class="text-danger">Are you sure want to delete?</h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal" onclick="Delete()">Delete</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+$(document).ready(function () {
+        ShowListOrderDetails();
+    });
+
+    function ShowListOrderDetails() {
+        $.ajax({
+            type: "GET",
+            url: "/Api/OrderDetails/GetByOrderId?orderId=" + @Model.Id,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response) {
+
+                    $("#data-table").empty();
+
+                    var listOrderDetails = "";
+
+                    for (var i = 0; i < response.length; i++) {
+                        var orderDetails = '';
+                        var id = response[i].Id;
+
+                        orderDetails = orderDetails
+                            + "<tr>"
+                            + "<td class='align-middle' style='text-align: center;'>" + "<a href='/Admin/Products/Details?productId=" + response[i].ProductId +"'><img src='" + response[i].Product.Thumbnail + "'" + "alt = 'image' style = 'height: 100px;'/></a>" + "</td>"
+                            + "<td class='align-middle' style='text-align: left;'><a class='text-white text-decoration-none' href='/Admin/Products/Details?productId=" + response[i].Product.Id + "'>" + response[i].Product.Name + "</a></td>"
+                            + "<td class='align-middle' style='text-align: center;'>" + "$" + response[i].UnitPrice + ".00" + "</td>"
+                            + "<td class='align-middle' style='text-align: center;'>" + response[i].Quantity + "</td>"
+                            + "<td class='align-middle' style='text-align: center;'>" + response[i].Discount + "</td>"
+                            + "<td class='align-middle'>"
+                            + "<div class='d-flex justify-content-between'>"
+                            + "<button class='btn btn-danger' data-bs-toggle='modal' data-bs-target='#OrderDetailsDeleteModal' onclick='ShowOrderDetailsDeleteModal(" + id + ")'>Delete</button>"
+                            + "</div>"
+                            + "</td>";
+
+                        listOrderDetails += orderDetails;
+                    }
+
+                    if (listOrderDetails != '') {
+                        $("#data-table").append(listOrderDetails);
+                    }
+                }
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+
+    var currentOrderDetailsIdToDelete = '';
+    function ShowOrderDetailsDeleteModal(id) {
+        $.ajax({
+            type: "GET",
+            url: "/Api/OrderDetails/GetById?orderDetailsId=" + id,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                if (response) {
+                    currentOrderDetailsIdToDelete = id;
+                }
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+
+    function Delete() {
+        $.ajax({
+            type: "DELETE",
+            url: "/Api/OrderDetails/Delete?orderDetailsId=" + currentOrderDetailsIdToDelete,
+            success: function (response) {
+                ShowListOrderDetails();
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+</script>

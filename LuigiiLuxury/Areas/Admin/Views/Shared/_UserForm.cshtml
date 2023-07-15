@@ -1,0 +1,221 @@
+﻿@model int
+
+<form class="border p-4">
+    <!-- Id -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-betweben">
+        <label class="col-sm-3 col-form-label">ID</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="inputID" placeholder="ID" disabled="disabled" required>
+            @*@Html.ValidationMessageFor(m => m.Id)*@
+        </div>
+    </div>
+
+    <!-- Email -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+        <label class="col-sm-3 col-form-label">Email</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="inputEmail" disabled="disabled">
+        </div>
+    </div>
+
+    <!-- Password -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+        <label class="col-sm-3 col-form-label">Password</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="inputPassword" disabled="disabled">
+        </div>
+    </div>
+
+    <!-- Created At -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+        <label class="col-sm-3 col-form-label">Created At</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="inputCreatedAt" disabled="disabled">
+        </div>
+    </div>
+
+    <!-- Updated At -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+        <label class="col-sm-3 col-form-label">Updated At</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="inputUpdatedAt" disabled="disabled">
+        </div>
+    </div>
+
+    <!-- Is Deleted -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+        <label class="col-sm-3 col-form-label">Is Deleted</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="inputIsDeleted" disabled="disabled">
+        </div>
+    </div>
+
+    <!-- Role -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+        <label class="col-sm-3 col-form-label">Role</label>
+        <div class="col-sm-9">
+            @Html.Partial("_InputSelectOptionRole")
+        </div>
+    </div>
+
+    <!-- First Name -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-betweben">
+        <label class="col-sm-3 col-form-label">First Name</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="inputFirstName" placeholder="enter first name">
+            @*@Html.ValidationMessageFor(m => m.FirstName)*@
+        </div>
+    </div>
+
+    <!-- Last Name -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+        <label class="col-sm-3 col-form-label">Last Name</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="inputLastName" placeholder="enter last name">
+            @*@Html.ValidationMessageFor(m => m.LastName)*@
+        </div>
+    </div>
+
+
+    <!-- Phone Number -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+        <label class="col-sm-3 col-form-label">Phone Number</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="inputPhoneNumber" placeholder="enter phone number">
+            @*@Html.ValidationMessageFor(m => m.PhoneNumber)*@
+        </div>
+    </div>
+
+    <!-- Address -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+        <label class="col-sm-3 col-form-label">Address</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="inputAddress" placeholder="enter address">
+            @*@Html.ValidationMessageFor(m => m.Address)*@
+        </div>
+    </div>
+
+    <!-- City -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+        <label class="col-sm-3 col-form-label">City</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="inputCity" placeholder="enter city">
+        </div>
+    </div>
+
+    <div class="form-group row d-flex align-content-center justify-content-between mt-4">
+        <div class="col-5 col-sm-5 col-md-5 col-lg-4 col-xl-4 d-grid">
+            <button id="delte" type="button" class="btn btn-danger" data-bs-toggle='modal' data-bs-target='#User-DeleteModal' onclick="ShowUserDeleteModal()">Delete</button>
+        </div>
+        <div class="col-5 col-sm-5 col-md-5 col-lg-4 col-xl-4 d-grid">
+            <button id="create" type="button" class="btn btn-dark" onclick="Update()">Update</button>
+        </div>
+    </div>
+</form>
+
+<!--USER DELETE MODAL-->
+<div class="modal fade" id="User-DeleteModal" tabindex="-1" aria-labelledby="UserDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="UserDeleteModalLabel">user delete</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5 class="text-danger">Are you sure want to delete this user?</h5>
+            </div>
+            <div class="modal-footer">
+                <button onclick="DeleteUser()" type="button" id="delete-user-button" class="btn btn-danger" data-bs-dismiss="modal">Delete</button>
+                <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        ShowDaTa();
+    })
+
+    function ShowDaTa() {
+        $.ajax({
+            type: "GET",
+            url: "/Api/Users/GetById?userId=" + @Model,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                $("#inputID").val(response.Id);
+                $("#inputFirstName").val(response.FirstName);
+                $("#inputLastName").val(response.LastName);
+                $("#inputPhoneNumber").val(response.PhoneNumber);
+                $("#inputAddress").val(response.Address);
+                $("#inputCity").val(response.City);
+                $("#inputEmail").val(response.Email);
+                $("#inputPassword").val(response.Password);
+                $("#inputCreatedAt").val(response.CreatedAt);
+                $("#inputUpdatedAt").val(response.UpdatedAt);
+                $("#inputIsDeleted").val(response.IsDeleted);
+                $("#inputRole").val(response.Role.Name);
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        })
+    }
+
+    function Update() {
+        var user = {};
+
+        user.Id = $("#inputID").val();
+        user.FirstName = $("#inputFirstName").val();
+        user.LastName = $("#inputLastName").val();
+        user.PhoneNumber = $("#inputPhoneNumber").val();
+        user.Address = $("#inputAddress").val();
+        user.City = $("#inputCity").val();
+
+        $.ajax({
+            type: "PUT",
+            url: "/Api/Users/Update?userId=" + @Model,
+            data: JSON.stringify(user),
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                ShowDaTa();
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        })
+    }
+
+    // DELETE
+    function ShowUserDeleteModal() {
+        var url = "/Api/Users/GetById?userId=" + @Model;
+        $.ajax({
+            type: "GET",
+            url: url,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                if (response) {
+                    currentOrderIdToDelete = id;
+                }
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+    function DeleteUser() {
+        var url = "/Api/Users/Delete?userId=" + @Model;
+        $.ajax({
+            type: "DELETE",
+            url: url,
+            success: function (response) {
+                window.location.href = '/Admin/Users/Index';
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+</script>

@@ -1,0 +1,53 @@
+﻿
+<form class="row d-flex justify-content-center align-content-center border border-dark p-3">
+    <!--Id-->
+    <div class="row mb-3 p-0">
+        <label class="mb-1 p-0" for="txtAvailabilityStatusCode">Code</label>
+        <input type="text" class="form-control" id="txtAvailabilityStatusCode" placeholder="enter code" required>
+    </div>
+    <!--Brand Name-->
+    <div class="row mb-3 p-0">
+        <label class="mb-1 p-0" for="txtAvailabilityStatusName">Name</label>
+        <input type="text" class="form-control" id="txtAvailabilityStatusName" placeholder="enter name" required>
+    </div>
+    <div class="row p-0 d-flex justify-content-end align-content-center">
+        <button id="create" type="button" class="btn btn-dark col-5" onclick="CreateBrand()">Create</button>
+    </div>
+</form>
+
+<script>
+    function CLearForm() {
+        $('#txtAvailabilityStatusCode').val('');
+        $('#txtAvailabilityStatusName').val('');
+    }
+
+    // CREATE
+    function CreateBrand() {
+        var availabilityStatus = {};
+
+        if ($('#txtAvailabilityStatusName').val() === '' && $('#txtAvailabilityStatusCode').val() === '') {
+            alert("No filed can be left blank");
+        }
+        else {
+            availabilityStatus.Code = $('#txtAvailabilityStatusCode').val();
+            availabilityStatus.Name = $('#txtAvailabilityStatusName').val();
+
+            if (AvailabilityStatus) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Api/AvailabilityStatus/Create",
+                    dataType: "json",
+                    data: JSON.stringify(availabilityStatus),
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+                        CLearForm();
+                        ShowData();
+                    },
+                    error: function (errorMessage) {
+                        alert(errorMessage);
+                    }
+                });
+            }
+        }
+    }
+</script>

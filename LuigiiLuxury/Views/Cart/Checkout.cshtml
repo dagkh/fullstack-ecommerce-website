@@ -1,0 +1,88 @@
+﻿@model LuigiiLuxury.Domain.ViewModels.OrderFormViewModel
+@using LuigiiLuxury.Domain.ViewModels
+
+<style>
+    .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    .form-control {
+        padding: 10px;
+    }
+
+    * {
+        font-size: 13px;
+        text-transform: none;
+    }
+
+    .list-group-item {
+        padding: 10px;
+        border: none;
+    }
+
+
+    .field-validation-valid {
+        padding: 5px 0;
+        font-size: 12px;
+    }
+
+    #header-wrap {
+        height: 0vh;
+    }
+
+    .header, .footer {
+        display: none;
+    }
+</style>
+
+<div class="container min-vh-100">
+    <div class="row py-5">
+        <!--Form Checkouts-->
+        <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+            @Html.Partial("_CheckoutForm", Model)
+        </div>
+        <!--List Of Products-->
+        <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+            <table id="cart" class="table table-hover table-condensed">
+                <tbody>
+                    @foreach (var Item in (List<ItemViewModel>)Session["Items"])
+                    {
+                        <tr>
+                            <td data-th="Product" class="" style="width:10%">
+                                <a class="col-sm-10" href="/Products/Index?productID=@Item.Product.Id">
+                                    <div class="row">
+                                        <div class="col-sm-2 hidden-xs">
+                                            <img src="@Url.Content(Item.Product.Thumbnail)" alt="..." class="img-responsive" style="width:100px;" />
+                                        </div>
+                                    </div>
+                                </a>
+                            </td>
+                            <td class="align-middle" style="width:80%"><a class="col-sm-10" href="/Products/Index?productID=@Item.Product.Id"><p style="font-size: 13px;" class="nomargin">@Item.Product.Name</p></a></td>
+                            <td class="text-center align-middle" style="width:10%;">$@Item.TotalPrice</td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot style="padding-top: 50px;">
+                    <tr style="text-align: right;">
+                        <td colspan="3" style="text-align: right;"><strong>Total: $@Session["CartTotal"]</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <!--Discount code-->
+            <div class="row">
+                <div class="col-8 m-0">
+                    <input type="text" class="form-control" id="firstName" placeholder="discount code" value="" required>
+                </div>
+                <div class="col-4 d-grid">
+                    <button class="btn btn-dark" style="border: none;">apply</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

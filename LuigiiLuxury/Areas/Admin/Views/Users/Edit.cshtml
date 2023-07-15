@@ -1,0 +1,84 @@
+﻿@model LuigiiLuxury.Domain.ViewModels.EditUserDetailsViewModel
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm("Edit", "Users", new { area = "Admin" }, FormMethod.Post, new { enctype = "mutilpart/form-data" }))
+{
+    <!--First Name-->
+    <div class="form-group row pb-4">
+        @Html.LabelFor(currentObject => currentObject.FirstName, new { @class = "col-sm-2 col-form-label" })
+        <div class="col-sm-10">
+            @Html.TextBoxFor(currentObject => currentObject.UserID, new { type = "hidden", value = Model.FirstName })
+            @Html.TextBoxFor(currentObject => currentObject.FirstName, new { @class = "form-control", placeholder = "First Name", value = Model.FirstName })
+            @Html.ValidationMessageFor(currentObject => currentObject.FirstName)
+        </div>
+    </div>
+
+
+    <!--Last Name-->
+    <div class="form-group row pb-4">
+        @Html.LabelFor(currentObject => currentObject.LastName, new { @class = "col-sm-2 col-form-label" })
+        <div class="col-sm-10">
+            @Html.TextBoxFor(currentObject => currentObject.LastName, new { @class = "form-control", placeholder = "Last Name", value = Model.LastName })
+            @Html.ValidationMessageFor(currentObject => currentObject.LastName)
+        </div>
+    </div>
+
+
+    <!--Phone Number-->
+    <div class="form-group row pb-4">
+        @Html.LabelFor(currentObject => currentObject.PhoneNumber, new { @class = "col-sm-2 col-form-label" })
+        <div class="col-sm-10">
+            @Html.TextBoxFor(currentObject => currentObject.PhoneNumber, new { @class = "form-control", placeholder = "Phone Number", value = Model.PhoneNumber })
+            @Html.ValidationMessageFor(currentObject => currentObject.PhoneNumber)
+        </div>
+    </div>
+
+
+    <!--Address-->
+    <div class="form-group row pb-4">
+        @Html.LabelFor(currentObject => currentObject.Address, new { @class = "col-sm-2 col-form-label" })
+        <div class="col-sm-10">
+            @Html.TextBoxFor(currentObject => currentObject.Address, new { @class = "form-control", placeholder = "Address", value = Model.Address })
+            @Html.ValidationMessageFor(currentObject => currentObject.Address)
+        </div>
+    </div>
+
+
+    <!--City-->
+    <div class="form-group row pb-4">
+        @Html.LabelFor(currentObject => currentObject.City, new { @class = "col-sm-2 col-form-label" })
+        <div class="col-sm-10">
+            @Html.TextBoxFor(currentObject => currentObject.City, new { @class = "form-control", placeholder = "City", value = Model.City })
+            @Html.ValidationMessageFor(currentObject => currentObject.City)
+        </div>
+    </div>
+
+
+    <!--Is Deleted-->
+    <div class="form-group row pb-4">
+        @Html.LabelFor(currentObject => currentObject.IsDeleted, new { @class = "col-sm-2 col-form-label" })
+        <div class="col-sm-10">
+            <select class="form-select" aria-label="Default select example">
+                <option selected>@Model.IsDeleted</option>
+                <option value="true">true</option>
+                <option value="false">false</option>
+            </select>
+            @Html.ValidationMessageFor(currentObject => currentObject.IsDeleted)
+        </div>
+    </div>
+
+
+    <!--Create and Cancel button-->
+    <div class="col-sm-2">
+        <button type="submit" class="btn btn-success">Save</button>
+        <a class="btn btn-danger" href="/Admin/Users/Index"> Cancel </a>
+    </div>
+}
+<a href="/Admin/Users/Index"><i class="fa fa-arrow-left"></i> Back to Users List</a>
+

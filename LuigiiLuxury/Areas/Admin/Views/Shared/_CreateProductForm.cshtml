@@ -1,0 +1,110 @@
+﻿@model LuigiiLuxury.Domain.ViewModels.ProductFormViewModel
+
+@using (Html.BeginForm("Create", "Products", new { area = "Admin" }, FormMethod.Post, new { enctype = "multipart/form-data", @class = "border p-4" }))
+{
+    @Html.AntiForgeryToken()
+
+    <!-- Name -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-betweben">
+        @Html.LabelFor(m => m.Name, new { @class = "col-sm-3 col-form-label" })
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "Product Name" })
+            @Html.ValidationMessageFor(m => m.Name)
+        </div>
+    </div>
+
+    <!-- Brand -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+        @Html.LabelFor(m => m.BrandId, new { @class = "col-sm-3 col-form-label" })
+        <div class="col-sm-9">
+            @Html.Partial("_InputSelectOptionBrand")
+            @Html.ValidationMessageFor(m => m.BrandId)
+        </div>
+    </div>
+
+    <!-- AvailabilityStatus Code -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+        @Html.LabelFor(m => m.AvailabilityStatusCode, new { @class = "col-sm-3 col-form-label" })
+        <div class="col-sm-9">
+            @Html.Partial("_InputSelectOptionAvailabilitySatus")
+            @Html.ValidationMessageFor(m => m.AvailabilityStatusCode)
+        </div>
+    </div>
+
+    <!-- Price -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+        @Html.LabelFor(m => m.Price, new { @class = "col-sm-3 col-form-label" })
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.Price, new { @class = "form-control", placeholder = "Price" })
+            @Html.ValidationMessageFor(m => m.Price)
+        </div>
+    </div>
+
+    <!-- Discount Price -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+        @Html.LabelFor(m => m.DiscountPrice, new { @class = "col-sm-3 col-form-label" })
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.DiscountPrice, new { @class = "form-control", placeholder = "Discount Price" })
+        </div>
+    </div>
+
+    <!-- Number Of Products -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+        @Html.LabelFor(m => m.NumberOfProducts, new { @class = "col-sm-3 col-form-label" })
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.NumberOfProducts, new { @class = "form-control", placeholder = "Number Of Products" })
+            @Html.ValidationMessageFor(m => m.NumberOfProducts)
+        </div>
+    </div>
+
+    <!-- Description -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+        @Html.LabelFor(m => m.Description, new { @class = "col-sm-3 col-form-label" })
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.Description, new { @class = "form-control", placeholder = "Description" })
+            @Html.ValidationMessageFor(m => m.Description)
+        </div>
+    </div>
+
+    <!-- Condition -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+        @Html.LabelFor(m => m.Condition, new { @class = "col-sm-3 col-form-label" })
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.Condition, new { @class = "form-control", placeholder = "Condition" })
+            @Html.ValidationMessageFor(m => m.Condition)
+        </div>
+    </div>
+
+    <!-- Image -->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-between">
+        @Html.LabelFor(m => m.Thumbnail, new { @class = "col-sm-3 col-form-label" })
+        <div class="col-sm-9">
+            <input type="file" class="form-control" id="image" name="image" accept="image/*" onchange="readURL(this);" />
+            @Html.ValidationMessageFor(m => m.Thumbnail)
+        </div>
+    </div>
+
+    <!--Create and Cancel button-->
+    <div class="form-group mb-2 row d-flex align-content-center justify-content-between mt-5">
+        <div class="col-5 col-sm-5 col-md-5 col-lg-4 col-xl-4  d-grid">
+            <button type="submit" class="btn btn-dark"> Create </button>
+        </div>
+        <div class="col-5 col-sm-5 col-md-5 col-lg-4 col-xl-4 d-grid">
+            <a class="btn btn-light border" href="/Admin/Products/Index"> Cancel </a>
+        </div>
+    </div>
+}
+
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imageCreate').attr('src', e.target.result).width("100%");
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>

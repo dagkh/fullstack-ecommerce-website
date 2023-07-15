@@ -1,0 +1,42 @@
+﻿
+<select id="inputBrand" name="BrandId" class="form-select" aria-label="Default select example">
+</select>
+
+<script>
+    $(document).ready(function () {
+        ShowBrandsSelectOption();
+    })
+
+    // call api
+    function ShowBrandsSelectOption() {
+        $.ajax({
+            type: "GET",
+            url: "/Api/Brands/GetAll",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+
+                var options = "<option selected>-- select brand --</option>";
+                $("#inputBrand").empty();
+
+                for (var i = 0; i < response.length; i++) {
+                    var id = response[i].Id;
+                    var name = response[i].Name;
+
+                    var option = "<option value='" + id + "'>" + name + "</option>";
+
+                    if (option != "") {
+                        options += option;
+                    }
+                }
+
+                if (options != "") {
+                    $("#inputBrand").append(options);
+                }
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+</script>

@@ -1,0 +1,59 @@
+﻿<!-- HEADER - NAVIGATION -->
+<div id="header-wrap" class="row d-flex justify-content-center align-content-center">
+    <nav class="header">
+        <div class="row h-20">
+            <div class="col-4 d-flex align-content-center justify-content-start">
+
+                <a id="menu" class="header-nav-link" onclick="openNav()">menu</a>
+
+                <ul id="visible-menu" class="d-none align-content-center justify-content-start p-0 m-0">
+                    <li class=""><a class="header-nav-link" href="/Collections">Shop</a></li>
+                    <li class=""><a class="header-nav-link" href="/Pages">about</a></li>
+                </ul>
+            </div>
+
+            <!--Brand Name-->
+            <div class="col-4 d-flex align-content-center justify-content-center">
+                <a class="" href="/Home"><h1>Luigii</h1></a>
+            </div>
+
+            <!-- ACCOUNT & CART -->
+            <div class="col-4 d-flex align-content-center justify-content-end">
+                @if (Session["CurrentUserId"] == null)
+                {
+                    <a id="account" class="d-none header-nav-link" href="/Account/Login">account</a>
+                }
+                @if (Session["CurrentUserId"] != null)
+                {
+                    <a id="account" class="d-none header-nav-link" href="/Account">account</a>
+                }
+
+                @{
+                    int CountOfItemInCart = 0;
+                    if (Session["CountOfItemInCart"] != null)
+                    {
+                        CountOfItemInCart = (int)Session["CountOfItemInCart"];
+                    }
+                }
+                <a class="header-nav-link" href="/Cart">Cart (@CountOfItemInCart)</a>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<div id="myNav" class="overlay">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <div class="overlay-content m-0">
+        <a class="header-nav-link" href="/Collections">Shop</a>
+        @if (Session["CurrentUserId"] == null)
+        {
+            <a class="header-nav-link" href="/Account/Login">account</a>
+        }
+        @if (Session["CurrentUserId"] != null)
+        {
+            <a class="header-nav-link" href="/Account/Index">Account</a>
+        }
+        <a class="header-nav-link" href="/pages/index">about</a>
+        @*<a class="header-nav-link" href="#">Search</a>*@
+    </div>
+</div>

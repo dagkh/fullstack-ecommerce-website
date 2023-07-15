@@ -1,0 +1,37 @@
+﻿@model LuigiiLuxury.Domain.ViewModels.UserViewModel
+
+@{
+    ViewBag.Title = "Account";
+    <script src="~/Scripts/custom/crud/Order.js"></script>
+}
+
+<hr />
+<div style=" border-bottom: 1px solid #c6c6c6; margin-bottom: 15px;" class="row">
+    <div class="col-6 p-0">
+        <a href="/Collections/All" style="font-size: 11px; text-transform: uppercase; display: block; padding: 15px 0;"><i class="fa fa-solid fa-chevron-left"></i> return to store</a>
+    </div>
+    <div class="col-6 d-flex justify-content-end">
+        <a href="/Account/Logout" style="font-size: 11px; text-transform: uppercase; display: block; padding: 15px 0;">Log Out</a>
+    </div>
+</div>
+<style>
+    p {
+        font-size: 13px;
+        padding: 3px 0;
+    }
+</style>
+<div class="row">
+    <div class="col-6">
+        <div>
+            <h5 style="font-size: 10px; font-weight: bold; text-transform: uppercase;">@Session["CurrentFullName"]</h5>
+            <h5 style="font-size: 10px; font-weight: bold; text-transform: uppercase;">@Model.Email</h5>
+        </div>
+        <div>
+            <ul class="p-0 mt-3">
+                <li><a class="d-block" href="/Account/Update" style="font-size: 10px; font-weight: bold; text-transform: uppercase;">view address</a></li>
+                <li><a class="d-block" href="/Account/Orders" style="font-size: 10px; font-weight: bold; text-transform: uppercase;">view my orders</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+

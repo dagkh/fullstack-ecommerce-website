@@ -1,0 +1,114 @@
+﻿<div class="row d-flex justify-content-between align-items-center">
+    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+        <p class="text-uppercase" style="font-size: 12px;">Sort by:</p>
+    </div>
+    <div class="col-9 col-sm-9 col-md-9 col-lg-9 col-xl-9">
+        <select style="font-size: 10px;" name="sortBy" class="form-select rounded-0 text-uppercase" aria-label="Default select example" id="select-options-sortedby" onchange="if (this.value != 'default') { this.form.submit();}">
+        </select>
+    </div>
+</div>
+
+<script>
+    // call api
+    function ShowSelectOptionsSortedBy() {
+        $.ajax({
+            type: "GET",
+            url: "/Api/AvailabilityStatus/GetAll",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                $("#select-options-sortedby").empty();
+
+                var options = "";
+
+                options = options
+                    + "<option value='default'>Default</option>"
+                    + "<option value='price-ascending'>Price: ascending</option>"
+                    + "<option value='price-descending'>Price: descending</option>";
+
+                for (var i = 0; i < response.length; i++) {
+                    var code = response[i].Code;
+                    var name = response[i].Name;
+
+                    options = options
+                        + "<option value='" + code + "'>" + name + "</option>";
+                }
+
+                if (options != "") {
+                    $("#select-options-sortedby").append(options);
+                }   
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+
+    function ChangeSortedby(sortedby) {
+        if (sortedby === "Default") {
+            ShowProducts();
+        }
+        else {
+            $.ajax({
+                type: "GET",
+                url: "/Api/Products/GetBySorted?sorted=" + sortedby,
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    if (response) {
+                        $("#all-product").empty();
+                        var products = "";
+
+                        for (var i = 0; i < response.length; i++) {
+
+                            var product = "";
+                            var id = response[i].Id;
+                            var image = response[i].Thumbnail;
+
+                            product = product
+                                + "<div class='col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 mb-5'>";
+
+                            product = product
+                                + "<div>";
+
+                            if (response[i].AvailabilityStatusCode === 'SOLD') {
+                                product = product
+                                    + "<div class='position-absolute'>"
+                                    + "<span style='font-size: 9px; background-color: #565656;' class='text-white p-2'>Sold out</span>"
+                                    + "</div>";
+                            }
+
+                            product = product
+                                + "<a href='/Products/Details?productId=" + response[i].Id + "'>"
+                                + "<div>"
+                                + "<img src='" + response[i].Thumbnail + "' alt='image' style='width: 100%; height: 100%;' />"
+                                + "</div>"
+                                + "</a>"
+                                + "</div>";
+
+                            product = product
+                                + "<div>"
+                                + "<p>" + response[i].Name + "</p>"
+                                + "<label class='text-uppercase text-muted brand' style='font-size: 10px;'>" + response[i].Brand.Name + "</label>"
+                                + "<p>$" + response[i].Price + ".00</p>"
+                                + "</div>";
+
+                            product = product
+                                + "</div>";
+
+                            if (product != "")
+                                products += product;
+                        }
+
+                        if (products != '') {
+                            $("#all-product").append(products);
+                        }
+                    }
+                },
+                error: function (errorMessage) {
+                    alert(errorMessage);
+                }
+            });
+        }
+    }
+</script>

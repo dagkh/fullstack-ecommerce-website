@@ -1,0 +1,15 @@
+﻿@model int
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<hr class="m-0" />
+<div style=" border-bottom: 1px solid #c6c6c6; margin-bottom: 15px;">
+    <a href="/Admin/Users/Index" class="text-dark text-decoration-none" style="font-size: 12px; text-transform: uppercase; display: block; padding: 15px 0;"><i class="fa fa-solid fa-chevron-left"></i> back to list of users</a>
+</div>
+
+<h2>Details</h2>
+
+@Html.Partial("_UserForm", Model)

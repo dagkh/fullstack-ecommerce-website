@@ -1,0 +1,142 @@
+﻿
+@{
+    ViewBag.Title = "All";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<hr />
+<div class="row d-flex justify-content-center align-items-center">
+    <div class="col-12" style="border-bottom: 1px solid #c6c6c6;">
+        <span style="font-size: 11px; text-transform: uppercase; display: block; padding: 15px 0;"><a href="/Collections/All">all products</a></span>
+    </div>
+
+    <!--FILTER-->
+    <div class="container mb-5 mx-0 col-12" style="">
+        <div style="border-bottom: 1px solid #c6c6c6;" class="py-3 row d-flex justify-content-between align-items-center mb-5">
+            <!-- filter by brands-->
+            <div class="p-0 row col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4 mb-sm-2 mb-2 mb-md-0 mb-lg-0 mb-xl-0">
+                @Html.Partial("_SelectOptionsBrand")
+            </div>
+
+            <!-- Sort -->
+            <div class="p-0 row col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                @Html.Partial("_SelectOptionsSortedBy")
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center align-content-center" style="text-transform: uppercase;">
+            <div class="row" id="all-product">
+                @*
+                    <table>
+                        <tr>
+                            <td>
+                                @{
+                                    int previousPage = ViewBag.pageNo - 1;
+                                    if (previousPage <= 0)
+                                    {
+                                        previousPage = 1;
+                                    }
+
+                                    int nextPage = ViewBag.pageNo + 1;
+                                    if (nextPage > ViewBag.noOfPages)
+                                    {
+                                        nextPage = ViewBag.pageNo;
+                                    }
+                                }
+                                <ul class="pagination justify-content-center d-flex justify-content-center align-content-center">
+                                    @if (ViewBag.pageNo != 1)
+                                    {
+                                        <li class="page-item"><a style="border: 1px solid #eeeeee; padding: 5px;" class="nav-link pagination-link" href="/Collections/All?pageNo=@previousPage"><i class="fa fa-angle-left"></i> previous</a></li>
+                                    }
+                                    @for (int i = 0; i < ViewBag.noOfPages; i++)
+                                    {
+                                        if ((i + 1) == ViewBag.pageNo)
+                                        {
+                                            <li class="page-item"><a class="nav-link pagination-link font-weight-bold" href="/Collections/All?pageNo=@(i+1)">@(i + 1)</a></li>
+                                        }
+                                        else
+                                        {
+                                            <li class="page-item"><a class="nav-link pagination-link" href="/Collections/All?pageNo=@(i+1)">@(i + 1)</a></li>
+                                        }
+                                    }
+                                    @if (ViewBag.pageNo != ViewBag.noOfPages)
+                                    {
+                                        <li class="page-item"><a style="border: 1px solid #eeeeee; padding: 5px;" class="nav-link pagination-link" href="/Collections/All?pageNo=@nextPage">next <i class="fa fa-angle-right"></i></a></li>
+                                    }
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>
+                *@
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        ShowProducts();
+        ShowSelectOptionsBrand();
+        ShowSelectOptionsSortedBy();
+    })
+
+    function ShowProducts() {
+        $.ajax({
+            type: "GET",
+            url: "/Api/Products/GetAll",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response) {
+                    $("#all-product").empty();
+                    var products = "";
+
+                    for (var i = 0; i < response.length; i++) {
+
+                        var product = "";
+                        var id = response[i].Id;
+                        var image = response[i].Thumbnail;
+
+                        product = product
+                            + "<div class='col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 mb-5'>";
+
+                        if (response[i].AvailabilityStatusCode === 'SOLD') {
+                            product = product
+                                + "<div>"
+                                + "<div class='position-absolute'>"
+                                + "<span style='font-size: 9px; background-color: #565656;' class='text-white p-2'>Sold out</span>"
+                                + "</div>";
+                        }
+
+                        product = product
+                            + "<a href='/Products/Details?productId=" + response[i].Id + "'>"
+                            + "<div>"
+                            + "<img src='" + response[i].Thumbnail + "' alt='image' style='width: 100%; height: 100%;' />"
+                            + "</div>"
+                            + "</a>"
+                            + "</div>";
+
+                        product = product
+                            + "<div>"
+                            + "<p>" + response[i].Name + "</p>"
+                            + "<label class='text-uppercase text-muted brand' style='font-size: 10px;'>" + response[i].Brand.Name + "</label>"
+                            + "<p>$" + response[i].Price + ".00</p>"
+                            + "</div>";
+
+                        product = product
+                            + "</div>";
+
+                        if (product != "")
+                            products += product;
+                    }
+
+                    if (products != '') {
+                        $("#all-product").append(products);
+                    }
+                }
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+</script>

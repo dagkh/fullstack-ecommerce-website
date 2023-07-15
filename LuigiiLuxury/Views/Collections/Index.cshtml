@@ -1,0 +1,213 @@
+﻿@model PagedList.IPagedList<LuigiiLuxury.Domain.ViewModels.ProductViewModel>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "All Products";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<hr />
+<div class="row d-flex justify-content-center align-items-center">
+    <div class="col-12" style="border-bottom: 1px solid #c6c6c6;">
+        <span style="font-size: 11px; text-transform: uppercase; display: block; padding: 15px 0;"><a href="/Collections/Index">all products</a></span>
+    </div>
+
+    @*<div class="row d-flex align-items-center justify-content-start mt-3">
+            @using (Html.BeginForm("Index", "Collections", FormMethod.Get, new { @class = "col-12 col-sm-12 col-md-12 col-xl-6 col-lg-6" }))
+            {
+                <div class="input-group">
+                    @Html.TextBox("searchString", ViewBag.CurrentFilter as string, new { type = "search", @class = "form-control rounded", placeholder = "Search" })
+                    <button type="submit" class="btn btn-secondary">search</button>
+                </div>
+            }
+        </div>*@
+
+    <!--FILTER-->
+    <div style="border-bottom: 1px solid #c6c6c6;" class="col-12  mb-5">
+        <div class="py-3 row d-flex justify-content-between align-items-center">
+            <!-- filter by brands-->
+            <div class="p-0 row col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4 mb-sm-2 mb-2 mb-md-0 mb-lg-0 mb-xl-0">
+                @using (Html.BeginForm("Index", "Collections", FormMethod.Get, new { @class = "p-0" }))
+                {
+                    @Html.Partial("_SelectOptionsBrand")
+                }
+            </div>
+            <!-- Sort -->
+            <div class="p-0 row col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                @using (Html.BeginForm("Index", "Collections", FormMethod.Get, new { @class = "p-0" }))
+                {
+                    @Html.Partial("_SelectOptionsSortedBy")
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb-5 mx-0 col-12" style="">
+        <div class="d-flex justify-content-center align-content-center" style="text-transform: uppercase;">
+            <div class="row" id="all-product">
+                @foreach (var product in Model)
+                {
+                    <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 mb-5">
+                        <div>
+                            @if (product.AvailabilityStatusCode == "SOLD")
+                            {
+                                <div class="position-absolute">
+                                    <span style="font-size: 9px; background-color: #565656;" class="text-white p-2">Sold out</span>
+                                </div>
+                            }
+                            <a href="/Products/Details?productId=@product.Id">
+                                <div>
+                                    <img src="@Url.Content(product.Thumbnail)" alt="image" style="width: 100%; height: 100%;" />
+                                </div>
+                            </a>
+                        </div>
+                        <div>
+                            <p>@product.Name</p>
+                            <label class='text-uppercase text-muted brand' style='font-size: 10px;'>@product.Brand.Name</label>
+                            <p>$@product.Price.00</p>
+                        </div>
+                    </div>
+                }
+                <br />
+
+                <table>
+                    <tr>
+                        <td>
+                            @{
+                                int previousPage = Model.PageNumber - 1;
+                                if (previousPage <= 0)
+                                {
+                                    previousPage = 1;
+                                }
+
+                                int nextPage = Model.PageNumber + 1;
+                                if (nextPage > Model.PageCount)
+                                {
+                                    nextPage = Model.PageNumber;
+                                }
+                            }
+
+                            <ul class="pagination justify-content-center d-flex justify-content-center align-content-center">
+                                @if (Model.PageNumber != 1)
+                                {
+                                    if (ViewBag.Brand != null)
+                                    {
+                                        if (ViewBag.Sort != null)
+                                        {
+                                            <li class="page-item"><a style="border: 1px solid #eeeeee; padding: 5px;" class="nav-link pagination-link" href="/Collections?brand=@ViewBag.Brand&sortBy=@ViewBag.Sort&page=@previousPage"><p><i class="fa fa-angle-left"></i> previous</p></a></li>
+                                        }
+                                        else
+                                        {
+                                            <li class="page-item"><a style="border: 1px solid #eeeeee; padding: 5px;" class="nav-link pagination-link" href="/Collections?brand=@ViewBag.Brand&page=@previousPage"><p><i class="fa fa-angle-left"></i> previous</p></a></li>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (ViewBag.Sort != null)
+                                        {
+                                            <li class="page-item"><a style="border: 1px solid #eeeeee; padding: 5px;" class="nav-link pagination-link" href="/Collections?sortBy=@ViewBag.Sort&page=@previousPage"><p><i class="fa fa-angle-left"></i> previous</p></a></li>
+                                        }
+                                        else
+                                        {
+                                            <li class="page-item"><a style="border: 1px solid #eeeeee; padding: 5px;" class="nav-link pagination-link" href="/Collections?page=@previousPage"><p><i class="fa fa-angle-left"></i> previous</p></a></li>
+                                        }
+                                    }
+                                }
+
+                                @for (int i = 0; i < Model.PageCount; i++)
+                                {
+                                    if (ViewBag.Brand != null)
+                                    {
+                                        if (ViewBag.Sort != null)
+                                        {
+                                            if ((i + 1) != Model.PageNumber)
+                                            {
+                                                <li class="page-item"><a class="nav-link pagination-link" href="/Collections?brand=@ViewBag.Brand&sortBy=@ViewBag.Sort&page=@(i+1)">@(i + 1)</a></li>
+                                            }
+                                            else
+                                            {
+                                                <li class="page-item"><a class="nav-link pagination-link text-danger" href="/Collections?brand=@ViewBag.Brand&sortBy=@ViewBag.Sort&page=@(i+1)">@(i + 1)</a></li>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if ((i + 1) != Model.PageNumber)
+                                            {
+                                                <li class="page-item"><a class="nav-link pagination-link" href="/Collections?brand=@ViewBag.Brand&page=@(i+1)">@(i + 1)</a></li>
+                                            }
+                                            else
+                                            {
+                                                <li class="page-item"><a class="nav-link pagination-link text-danger" href="/Collections?brand=@ViewBag.Brand&page=@(i+1)">@(i + 1)</a></li>
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (ViewBag.Sort != null)
+                                        {
+                                            if ((i + 1) != Model.PageNumber)
+                                            {
+                                                <li class="page-item"><a class="nav-link pagination-link" href="/Collections?sortBy=@ViewBag.Sort&page=@(i+1)">@(i + 1)</a></li>
+                                            }
+                                            else
+                                            {
+                                                <li class="page-item"><a class="nav-link pagination-link text-danger" href="/Collections?sortBy=@ViewBag.Sort&page=@(i+1)">@(i + 1)</a></li>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if ((i + 1) != Model.PageNumber)
+                                            {
+                                                <li class="page-item"><a class="nav-link pagination-link" href="/Collections?page=@(i+1)">@(i + 1)</a></li>
+                                            }
+                                            else
+                                            {
+                                                <li class="page-item"><a class="nav-link pagination-link text-danger" href="/Collections?page=@(i+1)">@(i + 1)</a></li>
+                                            }
+                                        }
+                                    }
+                                }
+
+                                @if (Model.PageNumber != Model.PageCount)
+                                {
+                                    if (ViewBag.Brand != null)
+                                    {
+                                        if (ViewBag.Sort != null)
+                                        {
+                                            <li class="page-item"><a style="border: 1px solid #eeeeee; padding: 5px;" class="nav-link pagination-link" href="/Collections?brand=@ViewBag.Brand&sortBy=@ViewBag.Sort&page=@nextPage"><p>next <i class="fa fa-angle-right"></i></p></a></li>
+                                        }
+                                        else
+                                        {
+                                            <li class="page-item"><a style="border: 1px solid #eeeeee; padding: 5px;" class="nav-link pagination-link" href="/Collections?brand=@ViewBag.Brand&page=@nextPage"><p>next <i class="fa fa-angle-right"></i></p></a></li>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (ViewBag.Sort != null)
+                                        {
+                                            <li class="page-item"><a style="border: 1px solid #eeeeee; padding: 5px;" class="nav-link pagination-link" href="/Collections?sortBy=@ViewBag.Sort&page=@nextPage"><p>next <i class="fa fa-angle-right"></i></p></a></li>
+                                        }
+                                        else
+                                        {
+                                            <li class="page-item"><a style="border: 1px solid #eeeeee; padding: 5px;" class="nav-link pagination-link" href="/Collections?page=@nextPage"><p>next <i class="fa fa-angle-right"></i></p></a></li>
+                                        }
+                                    }
+                                }
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        ShowSelectOptionsBrand();
+        ShowSelectOptionsSortedBy();
+    })
+
+
+</script>

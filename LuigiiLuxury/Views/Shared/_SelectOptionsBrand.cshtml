@@ -1,0 +1,132 @@
+﻿
+<div class="row d-flex justify-content-around align-items-center">
+    <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+        <p class="text-uppercase" style="font-size: 12px;">brands: </p>
+    </div>
+    <div class="col-9 col-sm-9 col-md-9 col-lg-9 col-xl-9">
+        <select style="font-size: 10px;" name="brand" class="form-select rounded-0 text-uppercase font-weight-bold" aria-label="Default select example" id="select-options-brands" onchange="this.form.submit();">
+        </select>
+    </div>
+</div>
+
+<script>
+    // call api
+    function ShowSelectOptionsBrand() {
+        $.ajax({
+            type: "GET",
+            url: "/Api/Brands/GetAll",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                $("#select-options-brands").empty();
+
+                var options = "";
+
+                //options = "<option>all brands</option>";
+                options = options + "<option value='all brands' selected>all brands</option>";
+
+                for (var i = 0; i < response.length; i++) {
+                    var id = response[i].Id;
+                    var name = response[i].Name;
+
+                    var option = "<option value='" + name + "'>" + name + "</option>";
+
+                    if (option != "") {
+                        options += option;
+                    }
+                }
+
+                if (options != "") {
+                    $("#select-options-brands").append(options);
+                }
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+
+    var brand = {};
+    function ChangeBrands(brandId) {
+        if (brandId === "All brands") {
+            ShowProducts();
+        }
+        else {
+            $.ajax({
+                type: "GET",
+                url: "/Api/Brands/GetById?brandId=" + brandId,
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    brand.Id = response.Id;
+                    brand.Name = response.Name;
+                },
+                error: function (errorMessage) {
+                    alert(errorMessage);
+                }
+            });
+
+            $.ajax({
+                type: "GET",
+                url: "/Api/Products/GetByBrand?brandId=" + brandId,
+                dataType: "json",
+                data: JSON.stringify(brand),
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    if (response) {
+                        $("#all-product").empty();
+                        var products = "";
+
+                        for (var i = 0; i < response.length; i++) {
+
+                            var product = "";
+                            var id = response[i].Id;
+                            var image = response[i].Thumbnail;
+
+                            product = product
+                                + "<div class='col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 mb-5'>";
+
+                            product = product
+                                + "<div>";
+
+                            if (response[i].AvailabilityStatusCode === 'SOLD') {
+                                product = product
+                                    + "<div class='position-absolute'>"
+                                    + "<span style='font-size: 9px; background-color: #565656;' class='text-white p-2'>Sold out</span>"
+                                    + "</div>";
+                            }
+
+                            product = product
+                                + "<a href='/Products/Details?productId=" + response[i].Id + "'>"
+                                + "<div>"
+                                + "<img src='" + response[i].Thumbnail + "' alt='image' style='width: 100%; height: 100%;' />"
+                                + "</div>"
+                                + "</a>"
+                                + "</div>";
+
+                            product = product
+                                + "<div>"
+                                + "<p>" + response[i].Name + "</p>"
+                                + "<label class='text-uppercase text-muted brand' style='font-size: 10px;'>" + response[i].Brand.Name + "</label>"
+                                + "<p>$" + response[i].Price + ".00</p>"
+                                + "</div>";
+
+                            product = product
+                                + "</div>";
+
+                            if (product != "")
+                                products += product;
+                        }
+
+                        if (products != '') {
+                            $("#all-product").append(products);
+                        }
+                    }
+                },
+                error: function (errorMessage) {
+                    alert(errorMessage);
+                }
+            });
+        }
+    }
+</script>

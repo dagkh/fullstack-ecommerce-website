@@ -1,0 +1,107 @@
+﻿
+<div class="row" id="all-product">
+    @foreach (var product in Model)
+    {
+        <div class="col-6 col-sm-6 col-md-4 col-lg-4 col-xl-4 mb-5">
+            <div>
+                @if (product.AvailabilityStatusId == 2)
+                {
+                    <div class="position-absolute">
+                        <span style="font-size: 9px; background-color: #565656;" class="text-white p-2">Sold out</span>
+                    </div>
+                }
+                <a href="/products/details?page=@ViewBag.page&productid=@product.Id">
+                    <div>
+                        <img src="@Url.Content(product.Thumbnail)" alt="image" style="width: 100%; height: 100%;" />
+                    </div>
+                </a>
+            </div>
+            <div>
+                <p>@product.Name</p>
+                <p>$@product.Price</p>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    $(document).ready(function () {
+        ShowProducts();
+    });
+
+    function ShowProducts() {
+        $.ajax({
+            type: "GET",
+            url: "Api/Products/GetAll",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                var products = "";
+
+                for (var i = 0; i < response.length; i++) {
+                    var product = "<div class='col-6 col-sm-6 col-md-4 col-lg-4 col-xl-4 mb-5'>";
+
+                @*@if (product.AvailabilityStatusId == 2)
+                {
+                    <div class="position-absolute">
+                    <span style="font-size: 9px; background-color: #565656;" class="text-white p-2">Sold out</span>
+                </div>
+                }*@
+
+                    var image = "<div><a href='/Products/Details?page=ViewBag.page&productId='" + response[i].Id + ">"
+                    + "<div><img src='Url.Content(" + response[i].Thumbnail + ")' alt='image' style='width: 100%; height: 100%;'/></div></a></div>";
+
+                    var nameAndPrice = "<div><p>" + response[i].Name + "</p>" + "<p>" + response[i].Price + "</p></div>";
+            <div>
+        </div>
+                }
+            }
+        });
+    }
+</script>
+
+
+
+
+
+
+@*<table>
+        <tr>
+            <td>
+                @{
+                    int previousPage = ViewBag.page - 1;
+                    if (previousPage <= 0)
+                    {
+                        previousPage = 1;
+                    }
+
+                    int nextPage = ViewBag.page + 1;
+                    if (nextPage > ViewBag.noOfPages)
+                    {
+                        nextPage = ViewBag.page;
+                    }
+                }
+                <ul class="pagination justify-content-center d-flex justify-content-center align-content-center">
+                    @if (ViewBag.page != 1)
+                    {
+                        <li class="page-item"><a style="border: 1px solid #eeeeee; padding: 5px;" class="nav-link pagination-link" href="/collections/all?page=@previousPage&sortedby=@ViewBag.sortedby"><i class="fa fa-angle-left"></i> previous</a></li>
+                    }
+                    @for (int i = 0; i < ViewBag.noOfPages; i++)
+                    {
+                        if ((i + 1) == ViewBag.page)
+                        {
+                            <li class="page-item"><a class="nav-link pagination-link font-weight-bold" href="/collections/all?page=@(i+1)&sortedby=@ViewBag.sortedby">@(i + 1)</a></li>
+                        }
+                        else
+                        {
+                            <li class="page-item"><a class="nav-link pagination-link" href="/collections/all?page=@(i+1)&sortedby=@ViewBag.sortedby">@(i + 1)</a></li>
+                        }
+                    }
+                    @if (ViewBag.page != ViewBag.noOfPages)
+                    {
+                        <li class="page-item"><a style="border: 1px solid #eeeeee; padding: 5px;" class="nav-link pagination-link" href="/collections/all?page=@nextPage&sortedby=@ViewBag.sortedby">next <i class="fa fa-angle-right"></i></a></li>
+                    }
+                </ul>
+            </td>
+        </tr>
+    </table>*@

@@ -1,0 +1,36 @@
+﻿
+<select id="inputCountry" name="CountryCode" class="form-select" aria-label="Default select example">
+</select>
+
+<script>
+    $(document).ready(function () {
+        ShowCountries();
+    });
+
+    function ShowCountries() {
+        $.ajax({
+            type: "GET",
+            url: "/Api/Countries/GetAll",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                var options = "<option value='VN' selected>Viet Nam</option>";
+
+                for (var i = 0; i < response.length; i++) {
+                    var option = "<option value=" + response[i].Code + ">" + response[i].Name + "</option>";
+
+                    if (option != "") {
+                        options += option;
+                    }
+                }
+
+                if (options != "") {
+                    $('#inputCountry').append(options);
+                }
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+</script>

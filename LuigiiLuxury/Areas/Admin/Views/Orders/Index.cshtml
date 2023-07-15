@@ -1,0 +1,255 @@
+﻿@{
+    ViewBag.Title = "Orders";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<div class="table-responsive">
+    <table class="table table-hover table-dark">
+        <thead>
+            <tr>
+                <th style="width: 3%;">ID</th>
+                <th style="width: 15%;">Name</th>
+                <th style="width: 10%;">Phone</th>
+                <th style="">Address</th>
+                <th style="width: 10%;">Order Date</th>
+                <th style="width: 10%;">Status</th>
+                <th style="width: 20%;" class="text-center">Action</th>
+        </thead>
+        <tbody id="data-table">
+        </tbody>
+    </table>
+</div>
+
+<!--ORDER DETAILS MODAL-->
+<div class="modal fade" id="Order-DetailsModal" tabindex="-1" aria-labelledby="OrderDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="OrderDetailsModalLabel">order details</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table>
+                    <tr>
+                        <th><label>Order ID: </label></th>
+                        <td id="Id-details" class="text-danger"></td>
+                    </tr>
+                    <tr>
+                        <th><label>Order Date: </label></th>
+                        <td id="OrderDate-details"></td>
+                    </tr>
+                    <tr>
+                        <th><label>Order Status: </label></th>
+                        <td id="OrderStatusID-details"></td>
+                    </tr>
+                    <tr>
+                        <th><label>Full Name: </label></th>
+                        <td id="ShipFullName-details"></td>
+                    </tr>
+                    <tr>
+                        <th><label>Phone: </label></th>
+                        <td id="ShipPhoneNumber-details"></td>
+                    </tr>
+                    <tr>
+                        <th><label>Country: </label></th>
+                        <td id="CountryID-details"></td>
+                    </tr>
+                    <tr>
+                        <th><label>City: </label></th>
+                        <td id="ShipCity-details"></td>
+                    </tr>
+                    <tr>
+                        <th><label>Address: </label></th>
+                        <td id="ShipAddress-details"></td>
+                    </tr>
+                    <tr>
+                        <th><label>User ID: </label></th>
+                        <td id="UserID-details"></td>
+                    </tr>
+                    <tr>
+                        <th><label>Email: </label></th>
+                        <td id="Email-details"></td>
+                    </tr>
+                    <tr>
+                        <th><label>Note: </label></th>
+                        <td id="Note-details"></td>
+                    </tr>
+                    <tr>
+                        <th><label>Region: </label></th>
+                        <td id="ShipRegion-details"></td>
+                    </tr>
+                    <tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--SET ORDER STATUS MODAL-->
+<div class="modal fade" id="SetOrderStatusModal" tabindex="-1" aria-labelledby="SetOrderStatusModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="SetOrderStatusModalLabel">order status</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @Html.Partial("_SetOrderStatusForm")
+            </div>
+            <div class="modal-footer">
+                <button onclick="SetOrderStatus()" type="button" id="delete-user-button" class="btn btn-dark" data-bs-dismiss="modal">Save</button>
+                <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--ORDER DELETE MODAL-->
+<div class="modal fade" id="Order-DeleteModal" tabindex="-1" aria-labelledby="OrderDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="OrderDetailsModalLabel">order delete</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5 class="text-danger">Are you sure to delete?</h5>
+            </div>
+            <div class="modal-footer">
+                <button onclick="Delete()" type="button" id="delete-user-button" class="btn btn-dark" data-bs-dismiss="modal">Delete</button>
+                <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        ShowData();
+    });
+
+    function ShowData() {
+        $.ajax({
+            type: "GET",
+            url: "/Api/Orders/GetAll",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                if (response) {
+                    $("#data-table").html('');
+                    var orders = "";
+                    for (var i = 0; i < response.length; i++) {
+                        var order = '';
+                        var id = response[i].Id;
+                        order = order
+                            + "<tr>"
+                            + "<td class='align-middle' scope='row'>" + response[i].Id + "</td>"
+                            + "<td class='align-middle'>" + response[i].ShipFullName + "</td>"
+                            + "<td class='align-middle'>" + response[i].ShipPhoneNumber + "</td>"
+                            + "<td class='align-middle'>" + response[i].ShipAddress + "</td>"
+                            + "<td class='align-middle'>" + response[i].OrderDate + "</td>"
+                            + "<td class='align-middle'>" + response[i].OrderStatus.Name + "</td>"
+                            + "<td class='align-middle'>"
+                            + "<div class='d-flex justify-content-between align-items-center'>"
+                            + "<button class='btn btn-secondary' data-bs-toggle='modal' data-bs-target='#SetOrderStatusModal' onclick = 'ShowSetOrderStatusModal(" + id + ")'>Set Status</button>"
+                            + "<a href='/Admin/Orders/Details?orderId=" + id + "' class='btn btn-primary text-white'>Details</a>"
+                            + "<button class='btn btn-danger' data-bs-toggle='modal' data-bs-target='#Order-DeleteModal' onclick = 'GetOrderToDelete(" + id + ")'>Delete</button>"
+                            + "</div>"
+                            + "</td>"
+                            + "</tr>";
+
+                        orders += order;
+                    }
+                    if (orders != '') {
+                        $("#data-table").append(orders);
+                    }
+                }
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+
+    // DELETE
+    var currentOrderIdToDelete = '';
+    function GetOrderToDelete(id) {
+        var url = "/Api/Orders/GetById?orderId=" + id;
+        $.ajax({
+            type: "GET",
+            url: url,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                if (response) {
+                    currentOrderIdToDelete = id;
+                }
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+    function Delete() {
+        var url = "/Api/Orders/Delete?orderId=" + currentOrderIdToDelete;
+        $.ajax({
+            type: "DELETE",
+            url: url,
+            success: function (response) {
+                ShowData();
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+
+    // Set order status
+    var currentOrderIdToSetOrderStatus = '';
+    function ShowSetOrderStatusModal(id) {
+        $.ajax({
+            type: "GET",
+            url: "/Api/Orders/GetById?orderId=" + id,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                if (response) {
+                    currentOrderIdToSetOrderStatus = response.Id;
+                    $("#inputOrderId").val(response.Id);
+                    $("#inputOrderStatus").val(response.OrderStatus.Code);
+                }
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+    function SetOrderStatus() {
+        var setOrderStatusForm = {};
+        var OrderStatus = {};
+
+        OrderStatus.Code = $("#inputOrderStatus").val();
+        OrderStatus.Name = $("#inputOrderStatus").text();
+
+        setOrderStatusForm.OrderId = currentOrderIdToSetOrderStatus;
+        setOrderStatusForm.OrderStatus = OrderStatus;
+
+        $.ajax({
+            type: "PUT",
+            url: "/Api/Orders/SetOrderStatus",
+            data: JSON.stringify(setOrderStatusForm),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                ShowData();
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+</script>
+

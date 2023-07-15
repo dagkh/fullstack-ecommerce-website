@@ -1,0 +1,294 @@
+﻿@{
+    ViewBag.Title = "User";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayoutPage.cshtml";
+}
+<h2>List of users</h2>
+<div class="table-responsive">
+    <table class="table table-hover table-dark">
+        <thead>
+            <tr>
+                <th style="width: 5%;">ID</th>
+                <th style="width: 10%;">Role</th>
+                <th style="width: 20%;">First Name</th>
+                <th style="width: 20%;">Last Name</th>
+                <th style="width: 25%;">Email</th>
+                <th style="width: 20%; text-align: center;">Action</th>
+        </thead>
+        <tbody id="data-table">
+        </tbody>
+    </table>
+</div>
+
+@*<div class="container-xl">
+        <div class="table-responsive">
+            <div class="table-wrapper">
+                <div class="table-title bg-dark">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <h2><b>Users</b></h2>
+                        </div>
+                        <div class="col-sm-8">
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Role</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                            <th style="text-align: center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="data-table">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>*@
+
+<!--USER DETAILS MODAL-->
+<div class="modal fade" id="UserDetailsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">user details</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table>
+                    <tr>
+                        <th><label>Role: </label></th>
+                        <td id="userRole-details" class="text-danger"></td>
+                    </tr>
+                    <tr>
+                        <th><label>User ID: </label></th>
+                        <td id="userID-details"></td>
+                    </tr>
+                    <tr>
+                        <th><label>First Name: </label></th>
+                        <td id="userFirstName-details"></td>
+                    </tr>
+                    <tr>
+                        <th><label>Last Name: </label></th>
+                        <td id="userLastName-details"></td>
+                    </tr>
+                    <tr>
+                        <th><label>Email: </label></th>
+                        <td id="userEmail-details"></td>
+                    </tr>
+                    <tr>
+                        <th><label>Password: </label></th>
+                        <td id="userPassword-details"></td>
+                    </tr>
+                    <tr>
+                        <th><label>Phone Number: </label></th>
+                        <td id="userPhoneNumber-details"></td>
+                    </tr>
+                    <tr>
+                        <th><label>Address: </label></th>
+                        <td id="userAddress-details"></td>
+                    </tr>
+                    <tr>
+                        <th><label>City: </label></th>
+                        <td id="userCity-details"></td>
+                    </tr>
+                    <tr>
+                        <th><label>Created At: </label></th>
+                        <td id="userCreatedAt-details"></td>
+                    </tr>
+                    <tr>
+                        <th><label>Updated At: </label></th>
+                        <td id="userUpdatedAt-details"></td>
+                    </tr>
+                    <tr>
+                        <th><label>Is Deleted: </label></th>
+                        <td id="userIsDeleted-details"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--USER DELETE MODAL-->
+<div class="modal fade" id="UserDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Delete User</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5 class="text-dark">Are you sure want to delete <span class="text-danger" id="txtUserEmail"></span></h5>
+            </div>
+            <div class="modal-footer">
+                <button onclick="Delete()" type="button" id="delete-user-button" class="btn btn-dark" data-bs-dismiss="modal">Delete</button>
+                <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--USER SET ROLE MODAL-->
+<div class="modal fade" id="UserSetRoleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Set Role</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @Html.Partial("_SetRoleForm")
+            </div>
+            <div class="modal-footer">
+                <button onclick="SetRole()" type="button" id="delete-user-button" class="btn btn-dark" data-bs-dismiss="modal">Save</button>
+                <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        ShowData();
+    });
+
+    function ShowData() {
+        var url = "/Api/Users/GetAll";
+        $.ajax({
+            type: "GET",
+            url: url,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                if (response) {
+                    $("#data-table").empty();
+                    var users = "";
+                    for (var i = 0; i < response.length; i++) {
+                        var user = '';
+                        var id = response[i].Id;
+                        user = user
+                            + "<tr>"
+                            + "<td class='align-middle'>" + response[i].Id + "</td>"
+                            + "<td class='align-middle'><p class='m-0'>" + response[i].Role.Name + "</p></td>"
+                            //+ "<td>" + response[i].Role.Name + "</td>"
+                            + "<td class='align-middle'>" + response[i].FirstName + "</td>"
+                            + "<td class='align-middle'>" + response[i].LastName + "</td>"
+                            + "<td class='align-middle'>" + response[i].Email + "</td>"
+                            + "<td class='align-middle'>"
+                            + "<div class='d-flex justify-content-between align-items-center'>"
+                            + "<a class='btn btn-primary text-white' href='/Admin/Users/Details?userId=" + response[i].Id + "'>Details</a>"
+                            + "<button class='btn btn-secondary' data-bs-toggle='modal' data-bs-target='#UserSetRoleModal' onclick='ShowSetRoleModal(" + id + ")'>Set Role</button>"
+                            + "<button class='btn btn-danger' data-bs-toggle='modal' data-bs-target='#UserDeleteModal' onclick='ShowUserModalToDelete(" + id + ")'>Delete</button>"
+                            + "</div>"
+                            + "</td>"
+                            + "</tr>";
+                        users += user;
+                    }
+                    if (users != '') {
+                        $("#data-table").append(users);
+                    }
+                }
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+
+    function CLearForm() {
+        $('#txtUserName').val('');
+    }
+
+    // DELETE
+    var currentUserIdToDelete = '';
+    function ShowUserModalToDelete(id) {
+        $("#txtUserEmail").empty();
+
+        $.ajax({
+            type: "GET",
+            url: "/Api/Users/GetById?userId=" + id,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                if (response) {
+                    currentUserIdToDelete = response.Id;
+                    currentUserEmailToDelete = response.Email;
+
+                    $("#txtUserEmail").append(currentUserEmailToDelete);
+                }
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+    function Delete() {
+        var url = "/Api/Users/Delete?userId=" + currentUserIdToDelete;
+        $.ajax({
+            type: "DELETE",
+            url: url,
+            success: function (response) {
+                ShowData();
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+
+
+    // SET ROLE
+    var currentUserIdToSetRole = '';
+    function ShowSetRoleModal(id) {
+        $.ajax({
+            type: "GET",
+            url: "/Api/Users/GetById?userId=" + id,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                if (response) {
+                    currentUserIdToSetRole = response.Id;
+                    $("#inputUserId").val(response.Id);
+                    $("#inputRole").val(response.Role.Name);
+                }
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+
+    function SetRole() {
+        var setRoleForm = {};
+        var role = {};
+
+        role.Code = $("#inputRole").val();
+        role.Name = $("#inputRole").text();
+
+        setRoleForm.UserId = currentUserIdToSetRole;
+        setRoleForm.role = role;
+
+        $.ajax({
+            type: "PUT",
+            url: "/Api/Users/SetRole",
+            data: JSON.stringify(setRoleForm),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                ShowData();
+            },
+            error: function (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    }
+</script>

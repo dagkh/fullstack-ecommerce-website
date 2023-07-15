@@ -1,0 +1,122 @@
+﻿@using LuigiiLuxury.Domain.ViewModels
+@using LuigiiLuxury.Services
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@*@if (Session["Items"] != null)*@
+@if (Session["CountOfItemInCart"] != null)
+{
+    <hr />
+    <div>
+        <span style="font-size: 11px; text-transform: uppercase; display: block; padding: 15px 0;"><a href="Collections"><i class="fa fa-solid fa-chevron-left"></i> Continue to shopping</a></span>
+    </div>
+    using (Html.BeginForm("Checkout", "Cart", FormMethod.Get))
+    {
+        <div class="all-cart">
+            <div style="text-transform: uppercase;">
+                <div class="row d-none for-desktop mb-2">
+                    <div class="col-2">Product</div>
+                    <div class="col-10 row">
+                        <div class="col-6"></div>
+                        <div class="col-2 text-center">Price</div>
+                        <div class="col-2 text-center">Quantity</div>
+                        <div class="col-2 text-end">Total</div>
+                    </div>
+                </div>
+                @foreach (var Item in (List<ItemViewModel>)Session["Items"])
+                {
+                    <hr />
+                    <div class="row" style="padding: 30px 0;">
+                        <!-- Image -->
+                        <div class="col-3 col-sm-3 col-md-3 col-lg-2 col-xl-2 d-flex justify-content-start align-content-center">
+                            <a class="d-flex justify-content-center" href="/Products/Index?productId=@Item.Product.Id">
+                                <img src="@Url.Content(Item.Product.Thumbnail)" alt="..." class="img-responsive" style="width: 100px;" />
+                            </a>
+                        </div>
+
+                        <!--FOR MOBILE & TABLET-->
+                        <div class="col-9  row for-mobile-tablet d-flex flex-row justify-content-end">
+                            <!-- Product Title -->
+                            <div class="">
+                                <a class="" href="/Products/Index?productId=@Item.Product.Id">
+                                    <p class="nomargin">@Item.Product.Name</p>
+                                    <label style="font-size: 10px;" class="text-uppercase text-muted brand">@Item.Product.Brand.Name</label>
+                                </a>
+                            </div>
+                            <!-- Product Price -->
+                            <div><p data-th="Subtotal" class="">$@Item.Product.Price.00</p></div>
+
+                            <!-- Quantity & Remove -->
+                            <div class="row d-flex justify-content-between align-content-center">
+                                <!--Quantity-->
+                                <div class="col-6">
+                                    <p style="border: 1px solid black; padding: 3px;" class="text-start"><a href="#" style="text-align: right;">@Item.Quantity</a></p>
+                                </div>
+                                <!--Remove-->
+                                <div class="col-6">
+                                    <p class="text-end"><a href="/Cart/RemoveItem?productId=@Item.Product.Id">remove</a></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--FOR DESKTOP-->
+                        <div class="row col-10 d-none for-desktop">
+                            <!-- Product Title -->
+                            <div class="col-6 text-start">
+                                <a class="" href="/Products/Details?productId=@Item.Product.Id">
+                                    <p class="nomargin">@Item.Product.Name</p>
+                                    <label style="font-size: 10px;" class="text-uppercase text-muted brand">@Item.Product.Brand.Name</label>
+                                </a>
+                            </div>
+                            <!-- Product Price -->
+                            <div class="col-2 text-center">
+                                <span data-th="Subtotal" class="text-center">$@Item.Product.Price.00</span>
+                            </div>
+                            <!-- Quantity -->
+                            <div class="col-2 text-center">
+                                <a href="#">@Item.Quantity</a>
+                                <label style="display: block;"><a style="font-size: 12px;" href="/Cart/RemoveItem?productId=@Item.Product.Id">remove <i class="fa fa-light fa-trash"></i></a></label>
+                            </div>
+                            <!-- Total Price -->
+                            <div class="col-2 text-end">
+                                <span class="text-center">$@Item.TotalPrice.00</span>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!--FOR MOBILE & TABLET-->
+            <div class="row d-flex justify-content-center align-content-center for-mobile-tablet mt-5" style="padding-bottom: 10px; text-transform: uppercase;">
+                <div class="col-12 text-end mb-2 p-0"><h2 class="m-0" style="font-size: 10px; font-weight: bold;">subtotal: $@Session["CartTotal"].00</h2></div>
+                <div class="col-12 text-end mb-2 p-0"><p>taxes and shipping caculated at checkout</p></div>
+                <div class="col-12 text-end mb-2 p-0 d-grid">
+                    <button style="font-weight: bold; font-size: 10px; padding: 7px 25px;" type="submit" class="btn btn-dark btn-outline-no text-uppercase">Check out</button>
+                </div>
+            </div>
+
+
+            <!--FOR DESKTOP-->
+            <div class="row d-none justify-content-center align-content-center for-desktop mt-5" style="padding-bottom: 10px; text-transform: uppercase;">
+                <div class="col-12 text-end mb-2 p-0"><h2 class="m-0" style="font-size: 10px; font-weight: bold;">subtotal: $@Session["CartTotal"].00</h2></div>
+                <div class="col-12 text-end mb-2 p-0"><p>taxes and shipping caculated at checkout</p></div>
+                <div class="col-12 text-end mb-2 p-0">
+                    <button style="font-weight: bold; font-size: 10px; padding: 10px 50px;" type="submit" class="btn btn-dark btn-outline-no text-uppercase">Check out</button>
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <hr />
+    <div style="border-bottom: 1px solid #c6c6c6;">
+        <a href="/Collections" style="font-size: 12px; text-transform: uppercase; display: block; padding: 15px 0;"><i class="fa fa-solid fa-chevron-left"></i> Go to shopping now</a>
+    </div>
+    <div style="margin-top: 15px;">
+        <p style="font-size: 12px; text-transform: uppercase;" class="text-danger">Your cart is currently empty.</p>
+    </div>
+}
+
